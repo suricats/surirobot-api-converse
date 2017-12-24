@@ -1,0 +1,175 @@
+{
+    "swagger": "2.0",
+    "info": {
+        "description": "Surirobot facial recognition module server.",
+        "version": "1.0.0",
+        "title": "SR Facial Recognition",
+        "contact": {
+            "email": "tberdy@hotmail.fr"
+        },
+        "license": {
+            "name": "Apache 2.0",
+            "url": "http://www.apache.org/licenses/LICENSE-2.0.html"
+        }
+    },
+    "tags": [
+        {
+            "name": "person",
+            "description": "Manage the people of the group"
+        },
+        {
+            "name": "identify",
+            "description": "Recognize the person on the picture"
+        },
+        {
+            "name": "compare",
+            "description": "Compare two pictures to know if this is the same person"
+        },
+        {
+            "name": "analyse",
+            "description": "Get info about a person on a picture"
+        }
+    ],
+    "paths": {
+        "/person": {
+            "get": {
+                "tags": [
+                    "person"
+                ],
+                "summary": "Get the list of people",
+                "responses": {
+                    "200": {
+                        "description": "OK"
+                    }
+                }
+            },
+            "post": {
+                "tags": [
+                    "person"
+                ],
+                "summary": "Add a new person to the list",
+                "parameters": [
+                    {
+                        "in": "formData",
+                        "name": "name",
+                        "description": "Name of the person",
+                        "required": true,
+                        "type": "string"
+                    },
+                    {
+                        "name": "picture",
+                        "in": "formData",
+                        "description": "Picture",
+                        "required": true,
+                        "type": "file"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK"
+                    },
+                    "400": {
+                        "description": "Error"
+                    }
+                }
+            }
+        },
+        "/identify": {
+            "post": {
+                "tags": [
+                    "identify"
+                ],
+                "summary": "Recognize the person on the pictures",
+                "parameters": [
+                    {
+                        "name": "picture",
+                        "in": "formData",
+                        "description": "The picture",
+                        "required": true,
+                        "type": "file"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK"
+                    },
+                    "400": {
+                        "description": "Error"
+                    }
+                }
+            }
+        },
+        "/analyse": {
+            "post": {
+                "tags": [
+                    "analyse"
+                ],
+                "summary": "Returns data about the face of the person",
+                "produces": [
+                    "application/json"
+                ],
+                "parameters": [
+                    {
+                        "name": "picture",
+                        "in": "formData",
+                        "description": "The picture",
+                        "required": true,
+                        "type": "file"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK"
+                    },
+                    "400": {
+                        "description": "Error"
+                    }
+                }
+            }
+        },
+        "/compare": {
+            "post": {
+                "tags": [
+                    "compare"
+                ],
+                "summary": "Compare two pictures",
+                "description": "Tell if the person on the pictures are the same",
+                "consumes": [
+                    "multipart/form-data"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "parameters": [
+                    {
+                        "name": "file0",
+                        "in": "formData",
+                        "description": "First picture",
+                        "required": true,
+                        "type": "file"
+                    },
+                    {
+                        "name": "file1",
+                        "in": "formData",
+                        "description": "Second picture",
+                        "required": true,
+                        "type": "file"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "successful operation",
+                        "schema": {
+                            "type": "boolean"
+                        }
+                    }
+                }
+            }
+        }
+    },
+    "basePath": "/face-recognition",
+    "schemes": [
+        "https",
+        "http"
+    ]
+}
