@@ -1,0 +1,29 @@
+language: php
+
+php:
+  - 7.2
+
+sudo: false
+
+services:
+  - mysql
+
+before_script:
+  - cp .env.example .env
+  - mysql -e 'create database lumen;'
+  - export DB_DATABASE=lumen
+  - export DB_USERNAME=travis
+  - export DB_PASSWORD=
+
+install:
+  - composer install
+
+script:
+  - php artisan migrate --force && vendor/bin/phpunit
+  
+cache:
+  directories:
+    - vendor 
+ 
+notifications:
+    email: false
