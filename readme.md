@@ -1,5 +1,7 @@
 # Speech To Text API
 
+[![Build Status](https://travis-ci.org/suricats/surirobot-api-speech-to-text.svg?branch=master)](https://travis-ci.org/suricats/surirobot-api-speech-to-text)
+
 The goal of this API is to convert an audio file to text.
 
 ## Requirements
