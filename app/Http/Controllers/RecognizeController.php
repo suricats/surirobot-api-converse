@@ -28,6 +28,10 @@ class RecognizeController extends Controller {
     public function recognizePost(Request $request) {
         $input = $request->all();
         if (!isset($input['audio'])) {
+        	return response()->json(array(
+                    'code' => 400,
+                    'msg' => 'BAD REQUEST : missing field audio'
+        ));
             throw new \InvalidArgumentException('Missing the required parameter $audio when calling identifyPost');
         }
         if (!isset($input['language'])) {
@@ -54,11 +58,13 @@ class RecognizeController extends Controller {
 
         $data = array();
         $confid = array();
+
         foreach ($results as $result) {
             $data[] = $result->alternatives()[0]['transcript'];
             $confid[] = $result->alternatives()[0]['confidence'];
         }
         if (array_empty($data)){
+        	echo "No voice was heard";
             return response()->json(array(
                         'code' => 210,
                         'msg' => 'No voice was heard'
