@@ -28,7 +28,7 @@ class RecognizeController extends Controller {
     public function recognizePost(Request $request) {
         $input = $request->all();
         if (!isset($input['audio'])) {
-        	return response()->json(array(
+            return response()->json(array(
                     'code' => 400,
                     'msg' => 'BAD REQUEST : missing field audio'
         ));
@@ -37,8 +37,22 @@ class RecognizeController extends Controller {
         if (!isset($input['language'])) {
             $language = 'fr-FR';
         }
+        if ($input['language']== 'en-US') {
+            $language = 'en-US';
+        }
+        if ($input['language']== 'en-GB') {
+            $language = 'en-GB';
+        }
+        if ($input['language']== 'de-DE') {
+            $language = 'de-DE';
+        }
+        if ($input['language']== 'es-ES') {
+            $language = 'es-ES';
+        }
         else
-            $language = $input['language'];
+            return response()->json(array(
+                    'code' => 500,
+                    'msg' => 'BAD REQUEST : field language unknown must be present in that list: fr-FR ; gb-GB ; en-GB ; de-DE ; es-ES'
         $audio = $input['audio'];
         $filepath = CoreUtils::saveFile($audio);
 
