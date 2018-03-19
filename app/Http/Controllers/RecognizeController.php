@@ -32,6 +32,9 @@ class RecognizeController extends Controller {
         if (!isset($input['language'])) {
             $language = 'fr-FR';
         }
+        else if ($input['language']== 'fr-FR') {
+            $language = 'fr-FR';
+        }
         else if ($input['language']== 'en-US') {
             $language = 'en-US';
         }
