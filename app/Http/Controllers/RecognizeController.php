@@ -37,42 +37,37 @@ class RecognizeController extends Controller {
         if (!isset($input['language'])) {
             $language = 'fr-FR';
         }
-        if ($input['language']== 'en-US') {
+        else if ($input['language']== 'en-US') {
             $language = 'en-US';
         }
-        if ($input['language']== 'en-GB') {
+        else if ($input['language']== 'en-GB') {
             $language = 'en-GB';
         }
-        if ($input['language']== 'de-DE') {
+        else if ($input['language']== 'de-DE') {
             $language = 'de-DE';
         }
-        if ($input['language']== 'es-ES') {
+        else if ($input['language']== 'es-ES') {
             $language = 'es-ES';
         }
         else
             return response()->json(array(
                     'code' => 500,
-                    'msg' => 'BAD REQUEST : field language unknown must be present in that list: fr-FR ; gb-GB ; en-GB ; de-DE ; es-ES'
+                    'msg' => 'BAD REQUEST : field language unknown must be present in that list: fr-FR ; gb-GB ; en-GB ; de-DE ; es-ES'));
         $audio = $input['audio'];
         $filepath = CoreUtils::saveFile($audio);
-
-
         $speech = new SpeechClient([
             'projectId' => CoreUtils::PROJECT_ID,
             'keyFilePath' => CoreUtils::API_CREDENTIALS,
             'languageCode' => $language,
         ]);
-
         $options = [
             'encoding' => 'LINEAR16',
             //'sampleRateHertz' => 44100,
         ];
         
         $results = $speech->recognize(fopen($filepath, 'r'), $options);
-
         $data = array();
         $confid = array();
-
         foreach ($results as $result) {
             $data[] = $result->alternatives()[0]['transcript'];
             $confid[] = $result->alternatives()[0]['confidence'];
@@ -84,7 +79,6 @@ class RecognizeController extends Controller {
                         'msg' => 'No voice was heard'
             ));
         }
-
         return response()->json(array(
                     'code' => 200,
                     'msg' => 'OK',
@@ -96,5 +90,4 @@ class RecognizeController extends Controller {
                     )
         ));
     }
-
 }
