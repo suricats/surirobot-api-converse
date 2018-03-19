@@ -1,12 +1,9 @@
 <?php
-
 namespace App\Http\Controllers;
-
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Utils\CoreUtils;
 use Google\Cloud\Speech\SpeechClient;
-
 function array_empty($array) {
    $is_empty = true;
    foreach($array as $k) {
@@ -14,9 +11,7 @@ function array_empty($array) {
    }
    return $is_empty;
 }
-
 class RecognizeController extends Controller {
-
     /**
      * Operation recognizePost
      *
@@ -55,6 +50,8 @@ class RecognizeController extends Controller {
                     'msg' => 'BAD REQUEST : field language unknown must be present in that list: fr-FR ; gb-GB ; en-GB ; de-DE ; es-ES'));
         $audio = $input['audio'];
         $filepath = CoreUtils::saveFile($audio);
+        
+
         $speech = new SpeechClient([
             'projectId' => CoreUtils::PROJECT_ID,
             'keyFilePath' => CoreUtils::API_CREDENTIALS,
@@ -73,7 +70,6 @@ class RecognizeController extends Controller {
             $confid[] = $result->alternatives()[0]['confidence'];
         }
         if (array_empty($data)){
-        	echo "No voice was heard";
             return response()->json(array(
                         'code' => 210,
                         'msg' => 'No voice was heard'
