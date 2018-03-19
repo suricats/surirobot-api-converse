@@ -46,7 +46,7 @@ class RecognizeController extends Controller {
         }
         else
             return response()->json(array(
-                    'code' => 500,
+                    'code' => 400,
                     'msg' => 'BAD REQUEST : field language unknown must be present in that list: fr-FR ; gb-GB ; en-GB ; de-DE ; es-ES'));
         $audio = $input['audio'];
         $filepath = CoreUtils::saveFile($audio);
