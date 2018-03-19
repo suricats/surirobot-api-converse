@@ -68,6 +68,7 @@ class RecognizeController extends Controller {
         $results = $speech->recognize(fopen($filepath, 'r'), $options);
         $data = array();
         $confid = array();
+        unlink($filepath);
         foreach ($results as $result) {
             $data[] = $result->alternatives()[0]['transcript'];
             $confid[] = $result->alternatives()[0]['confidence'];
