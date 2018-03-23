@@ -1,0 +1,86 @@
+swagger: '2.0'
+info:
+  description: SpeechToText by Google for Surirobot
+  version: 1.0.0
+  title: SpeechToText
+  termsOfService: ''
+  contact:
+    email: fabien.roussel921@gmail.com
+  license:
+    name: ISC
+    url: 'https://www.gnu.org/licenses/license-list.html#ISC'
+host: speech-to-text.api.surirobot.net
+basePath: /
+tags:
+  - name: speechtotext
+    description: tranduces a speech into a text
+schemes:
+  - http
+paths:
+  /recognize:
+    post:
+      tags:
+        - recognize
+      summary: tranduces a speech into a text
+      description: ''
+      operationId: recognize
+      produces:
+        - application/json
+      consumes:
+        - multipart/form-data
+      parameters:
+        - name: audio
+          in: formData
+          description: user audio in format .wav
+          required: true
+          type: file
+        - name: language
+          in: query
+          description: >-
+            Language of speech, you can find example here
+            https://cloud.google.com/speech/docs/languages
+          required: false
+          type: string
+          default: fr-FR
+          enum:
+            - fr-FR
+            - en-US
+            - en-GB
+      responses:
+        '200':
+          description: Ok
+          schema:
+            $ref: '#/definitions/OutputMessages'
+        '210':
+          description: Ok
+          schema:
+            $ref: '#/definitions/OutputError'
+      x-swagger-router-controller: Recognize
+definitions:
+  OutputMessages:
+    type: object
+    properties:
+      code:
+        type: string
+      msg:
+        type: string
+      data:
+        type: array
+        items:
+          type: object
+          properties:
+            text:
+              type: string
+      confidence:
+        type: array
+        items:
+          type: object
+          properties:
+            percentage:
+              type: number
+  OutputError:
+    properties:
+      code:
+        type: string
+      msg:
+        type: string
