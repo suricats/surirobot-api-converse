@@ -31,7 +31,7 @@ paths:
       parameters:
         - name: audio
           in: formData
-          description: user audio in format .wav
+          description: user audio in format .wav end encoded in LINEAR16
           required: true
           type: file
         - name: language
@@ -46,6 +46,8 @@ paths:
             - fr-FR
             - en-US
             - en-GB
+            - es-ES
+            - de-DE
       responses:
         '200':
           description: Ok
@@ -53,6 +55,14 @@ paths:
             $ref: '#/definitions/OutputMessages'
         '210':
           description: No voice was heard
+          schema:
+            $ref: '#/definitions/OutputError'
+        '400':
+          description: Missing field audio
+          schema:
+            $ref: '#/definitions/OutputError'
+        '422':
+          description: field language unknown
           schema:
             $ref: '#/definitions/OutputError'
       x-swagger-router-controller: Recognize
