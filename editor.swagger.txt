@@ -52,7 +52,7 @@ paths:
           schema:
             $ref: '#/definitions/OutputMessages'
         '210':
-          description: Ok
+          description: No voice was heard
           schema:
             $ref: '#/definitions/OutputError'
       x-swagger-router-controller: Recognize
@@ -61,7 +61,7 @@ definitions:
     type: object
     properties:
       code:
-        type: string
+        type: integer
       msg:
         type: string
       data:
@@ -81,6 +81,6 @@ definitions:
   OutputError:
     properties:
       code:
-        type: string
+        type: integer
       msg:
         type: string
