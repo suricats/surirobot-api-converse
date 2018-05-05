@@ -1,0 +1,94 @@
+openapi: 3.0.0
+info:
+  title: Speech to Text API
+  version: v1
+servers:
+  - url: 'https://speech-to-text.api.surirobot.fr/api'
+    description: Main (production) server
+paths:
+  /google/recognize:
+    post:
+      summary: Convert voice to text using Google Cloud Speech API
+      operationId: googleRecognize
+      tags:
+        - google
+      requestBody:
+        description: Member to create
+        required: true
+        content:
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/GoogleRequest'
+      responses:
+        200:
+          description: Operation successful
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GoogleResponse'
+        400:
+          description: Wrong parameter(s)
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        500:
+          description: API Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        503:
+          description: Google API is not available
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+components:
+  schemas:
+    GoogleRequest:
+      required:
+        - audio_file
+        - language
+      properties:
+        audio_file:
+          type: string
+          format: binary
+        language:
+          type: string
+          enum:
+            - fr-FR
+            - en-US
+    GoogleResponse:
+      required:
+        - text
+        - confidence
+      properties:
+        text:
+          type: string
+        confidence:
+          type: number
+          format: float
+    Error:
+      required:
+        - code
+        - msg
+      properties:
+        code:
+          type: string
+          enum:
+            - api_error
+            - external_api_error
+            - recognition_failed
+            - missing_parameter
+            - bad_parameter
+        msg:
+          type: string
+    ErrorResponse:
+      required:
+        - errors
+      properties:
+        errors:
+          type: array
+          items:
+            $ref: '#/components/schemas/Error'

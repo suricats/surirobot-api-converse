@@ -1,7 +1,7 @@
 import logging
 from flask import Blueprint, request, jsonify
 
-from speech_to_text.exceptions import RecognitionFailedException
+from speech_to_text.exceptions import RecognitionFailedException, MissingParameterException, BadParameterException, ExternalAPIException
 from speech_to_text.google.helpers import google_speech_send_request
 
 google = Blueprint('google-speech', __name__)
@@ -18,9 +18,9 @@ def recognize():
     errors = []
 
     if 'audio_file' not in request.files:
-        errors.append('Missing audio_file parameter.')
+        errors.append(MissingParameterException('audio_file').to_dict())
     if 'language' not in request.form:
-        errors.append('Missing language parameter.')
+        errors.append(MissingParameterException('language').to_dict())
 
     if errors:
         return jsonify({'errors': errors}), 400
@@ -29,14 +29,14 @@ def recognize():
     language = request.form['language']
 
     if language not in valid_language_code:
-        return jsonify({'errors': ['Bad language code. Valid code are {}'.format(', '.join(valid_language_code))]}), 400
+        return jsonify({'errors': [BadParameterException('language', valid_values=valid_language_code).to_dict()]}), 400
 
     try:
         res = google_speech_send_request(file, language)
     except RecognitionFailedException as e:
-        return jsonify({'errors': [str(e)]}), 503
+        return jsonify({'errors': [e.to_dict()]}), 500
     except Exception as e:
         logger.error(e)
-        return jsonify({'errors': ['Google API is unreliable.']}), 503
+        return jsonify({'errors': [ExternalAPIException('Google').to_dict()]}), 503
 
     return jsonify(res), 200
