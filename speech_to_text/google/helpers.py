@@ -17,7 +17,7 @@ def google_speech_send_request(file, language):
 
     try:
         return {
-            'data': response.results[0].alternatives[0].transcript,
+            'text': response.results[0].alternatives[0].transcript,
             'confidence': response.results[0].alternatives[0].confidence
         }
     except Exception as e:

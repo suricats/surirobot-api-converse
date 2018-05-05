@@ -13,18 +13,30 @@ The goal of this API is to convert an audio file to text.
 
 * Clone repository 
 * Create virtualenv
-  * `mkvirtualenv suri-stt && workon suri-stt`
+```shell
+mkvirtualenv suri-stt && workon suri-stt
+```
+
 * Install dependencies
-  * `pip install -r requirements.txt`
+```shell
+pip install -r requirements.txt
+```
+
 * Configure .env
-  * `cp .env.example .env`
+```shell
+cp .env.example .env
+``
 
 * Option 1 - Drop your Google API credentials in res/credentials.json
 * Option 2 (suri-downloader) -  Fill the login & password fields and do:
-  * `tools/get-credentials`
+```shell
+tools/get-credentials
+```
   
 * Run the server
-  * `./app.py`
+```shell
+./app.py
+```
 
 ## API Reference
 
