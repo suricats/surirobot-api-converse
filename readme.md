@@ -1,36 +1,31 @@
 # Speech To Text API
 
-[![Build Status](https://travis-ci.org/suricats/surirobot-api-speech-to-text.svg?branch=master)](https://travis-ci.org/suricats/surirobot-api-speech-to-text)
+![PyPI - Python Version](https://img.shields.io/badge/python-3.6-blue.svg)
 
 The goal of this API is to convert an audio file to text.
 
 ## Requirements
 
-* PHP 7.1
-* Composer 
+* Python3
+* Virtualenvwrapper 
 
 ## Installation 
 
-* Clone repository and use public folder as webroot
+* Clone repository 
+* Create virtualenv
+  * `mkvirtualenv suri-stt && workon suri-stt`
 * Install dependencies
-  * `composer install`
-
-* Drop your Google API credentials in resources/credentials/surirobot.json or use the suri-downloader:
-
+  * `pip install -r requirements.txt`
+* Configure .env
   * `cp .env.example .env`
-  * `nano .env`
 
-* Fill the login & password fields.
-* `tools/get-credentials.sh`
-
-* Make storage/ and public/storage/ writeable by your web server.
+* Option 1 - Drop your Google API credentials in res/credentials.json
+* Option 2 (suri-downloader) -  Fill the login & password fields and do:
+  * `tools/get-credentials`
+  
+* Run the server
+  * `./app.py`
 
 ## API Reference
 
-This project uses API-Speech from Google.
-
-## License
-
-This service uses the Lumen framework
-The Lumen framework is open-sourced software licensed under the [MIT 
-license](http://opensource.org/licenses/MIT)
+This project uses Google Cloud Speech.
