@@ -1,6 +1,8 @@
 # Speech To Text API
 
+![Build status](https://img.shields.io/badge/build-passing-brightgreen.svg)
 ![PyPI - Python Version](https://img.shields.io/badge/python-3.6-blue.svg)
+![Codecov](https://img.shields.io/badge/coverage-85%25-green.svg)
 
 The goal of this API is to convert an audio file to text.
 

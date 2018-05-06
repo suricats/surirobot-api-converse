@@ -5,8 +5,7 @@ from speech_to_text.exceptions import RecognitionFailedException
 speech_client = SpeechClient()
 
 
-def google_speech_send_request(file, language):
-    content = file.read()
+def google_speech_send_request(content, language):
     audio = types.RecognitionAudio(content=content)
     config = types.RecognitionConfig(
         encoding=enums.RecognitionConfig.AudioEncoding.LINEAR16,
@@ -18,7 +17,7 @@ def google_speech_send_request(file, language):
     try:
         return {
             'text': response.results[0].alternatives[0].transcript,
-            'confidence': response.results[0].alternatives[0].confidence
+            'confidence': round(float(response.results[0].alternatives[0].confidence), 4)
         }
     except Exception as e:
         raise RecognitionFailedException from e
