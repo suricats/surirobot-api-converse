@@ -1,25 +1,32 @@
-image: python:3.6
+image: python:latest
 stages:
   - test
 
 cache:
   paths:
-    - .pip
+    - .cache/
+    - venv/
 
 test:
   stage: test
   variables: {}
   before_script:
-    - mkdir -p .pip
-    - pip --cache-dir=.pip install -r requirements-dev.txt
+    - tools/get-credentials
+    - pip install virtualenv
+    - virtualenv venv
+    - source venv/bin/activate
+    - pip install -r requirements-dev.txt
   script:
     - pytest
 
 test_externalapi:
   variables: {}
   before_script:
-    - mkdir -p .pip
-    - pip --cache-dir=.pip install -r requirements-dev.txt
+    - tools/get-credentials
+    - pip install virtualenv
+    - virtualenv venv
+    - source venv/bin/activate
+    - pip install -r requirements-dev.txt
   script:
     - pytest -m externalapi
   only:
