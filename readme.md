@@ -6,6 +6,17 @@
 
 This API provides all the necessary endpoints to give the `converse` capability to Surirobot. 
 
+## Features
+
+* Speech-to-Text
+  * Google Cloud Speech
+ 
+* Text-to-Speech
+  * IBM Watson
+  
+* Natural Language Processing
+  * Recast.ai (WIP)
+
 ## Requirements
 
 * Python3
