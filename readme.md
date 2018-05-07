@@ -1,6 +1,6 @@
 # API Converse
 
-[![pipeline status](https://gitlab.kozlek.net/surirobot/api-converse/badges/master/pipeline.svg)](https://gitlab.kozlek.net/surirobot/api-converse/-/jobs)
+[![pipeline status](https://gitlab.kozlek.net/surirobot/api-converse/badges/master/pipeline.svg)](https://gitlab.kozlek.net/surirobot/api-converse/pipelines)
 [![coverage report](https://gitlab.kozlek.net/surirobot/api-converse/badges/master/coverage.svg)](https://gitlab.kozlek.net/surirobot/api-converse/commits/dev)
 [![PyPI - Python Version](https://img.shields.io/badge/python-3.6-blue.svg)](https://docs.python.org/3/whatsnew/3.6.html)
 
