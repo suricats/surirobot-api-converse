@@ -1,16 +1,17 @@
 import logging
-from flask import Blueprint, request, jsonify
+from flask import request, jsonify, Blueprint
 
-from speech_to_text.exceptions import RecognitionFailedException, MissingParameterException, \
+from api.exceptions import OperationFailedException, MissingParameterException, \
     BadParameterException, ExternalAPIException
-from speech_to_text.google.helpers import google_speech_send_request
-from speech_to_text.google.constants import LANGUAGES_CODE
+from api.speech_to_text.google.helpers import google_speech_send_request
+from api.speech_to_text.google.constants import LANGUAGES_CODE
 
-mod_google = Blueprint('google-speech', __name__)
+
+stt_google = Blueprint('stt_google', __name__)
 logger = logging.getLogger(__name__)
 
 
-@mod_google.route('/recognize', methods=['POST'])
+@stt_google.route('/recognize', methods=['POST'])
 def recognize():
     errors = []
 
@@ -35,7 +36,7 @@ def recognize():
 
     try:
         res = google_speech_send_request(file_content, language)
-    except RecognitionFailedException as e:
+    except OperationFailedException as e:
         return jsonify({'errors': [e.to_dict()]}), 500
     except Exception as e:
         logger.error(e)

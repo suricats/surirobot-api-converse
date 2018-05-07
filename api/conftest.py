@@ -1,6 +1,6 @@
 import pytest
 
-from speech_to_text.server import app as flask_app
+from api.server import app as flask_app
 
 
 @pytest.fixture()

@@ -15,15 +15,23 @@ class ExternalAPIException(APIException):
     def __init__(self, api_name='External'):
         super().__init__(
             'external_api_error',
-            '{} API is not working properly}'.format(api_name)
+            '{} API is not working properly'.format(api_name)
         )
 
 
-class RecognitionFailedException(APIException):
+class InvalidCredentialsException(APIException):
+    def __init__(self, api_name='External'):
+        super().__init__(
+            'invalid_credentials_error',
+            '{} API credentials are not valid.'.format(api_name)
+        )
+
+
+class OperationFailedException(APIException):
     def __init__(self):
         super().__init__(
-            'recognition_failed',
-            'API failed to transcript voice from your input file.'
+            'operation_failed',
+            'API failed to process your request. Try again.'
         )
 
 

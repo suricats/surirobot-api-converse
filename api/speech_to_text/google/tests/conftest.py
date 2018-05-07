@@ -6,7 +6,7 @@ from mock import Mock
 
 @pytest.fixture()
 def google_request():
-    file = os.getcwd() + '/speech_to_text/tests/fixtures/audio.wav'
+    file = os.getcwd() + '/api/speech_to_text/tests/fixtures/audio.wav'
     with io.open(file, 'rb') as audio_file:
         content = audio_file.read()
     return {
@@ -26,4 +26,3 @@ def result():
 @pytest.fixture()
 def google_response(result):
     return Mock(results=[Mock(alternatives=[Mock(transcript=result['text'], confidence=result['confidence'])])])
-

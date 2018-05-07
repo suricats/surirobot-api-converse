@@ -1,0 +1,86 @@
+{
+	"info": {
+		"_postman_id": "230f8fab-b564-4d53-9450-1a53ff40a146",
+		"name": "api-converse",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "speech-to-text",
+			"description": "",
+			"item": [
+				{
+					"name": "google-recognize",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "audio_file",
+									"description": "",
+									"type": "file"
+								},
+								{
+									"key": "language",
+									"value": "fr-FR",
+									"description": "",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{base_url}}/api/stt/google/recognize",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"stt",
+								"google",
+								"recognize"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "text-to-speech",
+			"description": "",
+			"item": [
+				{
+					"name": "ibm-speak",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"text\": \"Salut\",\n\t\"language\": \"fr-FR\"\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/api/tts/ibm/speak",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"tts",
+								"ibm",
+								"speak"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		}
+	]
+}

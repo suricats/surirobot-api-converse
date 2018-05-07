@@ -1,7 +1,7 @@
 import pytest
 from mock import patch
 
-from speech_to_text.google.helpers import google_speech_send_request, SpeechClient
+from api.speech_to_text.google.helpers import google_speech_send_request, SpeechClient
 
 
 @patch.object(SpeechClient, 'recognize', autospec=True)

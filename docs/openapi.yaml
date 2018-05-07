@@ -1,31 +1,33 @@
 openapi: 3.0.0
 info:
-  title: Speech to Text API
-  version: v1
+  title: API Converse
+  version: v2
+  description: This API contains all the endpoints needed by the surirobot to be able to handle a conversation with humans being.
 servers:
-  - url: 'https://speech-to-text.api.surirobot.fr/api'
+  - url: 'https://converse.api.suricats-consulting.com/api'
     description: Main (production) server
+  - url: 'https://converse.api.surirobot.fr/api'
+    description: Dev server
 paths:
-  /google/recognize:
+  /stt/google/recognize:
     post:
       summary: Convert voice to text using Google Cloud Speech API
-      operationId: googleRecognize
+      operationId: sttGoogleRecognize
       tags:
-        - google
+        - Speech-To-Text
       requestBody:
-        description: Member to create
         required: true
         content:
           multipart/form-data:
             schema:
-              $ref: '#/components/schemas/GoogleRequest'
+              $ref: '#/components/schemas/STTGoogleRequest'
       responses:
         200:
           description: Operation successful
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/GoogleResponse'
+                $ref: '#/components/schemas/STTGoogleResponse'
         400:
           description: Wrong parameter(s)
           content:
@@ -44,9 +46,52 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/ErrorResponse'
+  /tts/ibm/speak:
+    post:
+      summary: Convert text to voice using IBM Watson API
+      operationId: ttsIbmSpeak
+      tags:
+        - Text-Speech
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/TTSIBMRequest'
+      responses:
+        200:
+          description: Operation successful
+          content:
+            audio/wav:
+              schema:
+                $ref: '#/components/schemas/TTSIBMReponse'
+        400:
+          description: Wrong parameter(s)
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        401:
+          description: Invalid credentials
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        500:
+          description: API Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        503:
+          description: IBM API is not available
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
 components:
   schemas:
-    GoogleRequest:
+    STTGoogleRequest:
       required:
         - audio_file
         - language
@@ -59,7 +104,7 @@ components:
           enum:
             - fr-FR
             - en-US
-    GoogleResponse:
+    STTGoogleResponse:
       required:
         - text
         - confidence
@@ -69,6 +114,21 @@ components:
         confidence:
           type: number
           format: float
+    TTSIBMRequest:
+      required:
+        - text
+        - language
+      properties:
+        text:
+          type: string
+        language:
+          type: string
+          enum:
+            - fr-FR
+            - en-US
+    TTSIBMReponse:
+      type: string
+      format: binary
     Error:
       required:
         - code
@@ -79,7 +139,8 @@ components:
           enum:
             - api_error
             - external_api_error
-            - recognition_failed
+            - invalid_credentials_error
+            - operation_failed
             - missing_parameter
             - bad_parameter
         msg:

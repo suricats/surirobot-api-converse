@@ -1,6 +1,6 @@
 from google.cloud.speech import SpeechClient, enums, types
 
-from speech_to_text.exceptions import RecognitionFailedException
+from api.exceptions import OperationFailedException
 
 speech_client = SpeechClient()
 
@@ -20,4 +20,4 @@ def google_speech_send_request(content, language):
             'confidence': round(float(response.results[0].alternatives[0].confidence), 4)
         }
     except Exception as e:
-        raise RecognitionFailedException from e
+        raise OperationFailedException from e
