@@ -1,0 +1,24 @@
+image: python:3.6-alpine3.7
+stages:
+  - test
+
+variables:
+  ENVIRONMENT: "staging"
+  DEBUG: "false"
+
+test:
+  stage: test
+  variables: {}
+  before_script:
+    - pip install --no-cache-dir -r requirements-dev.txt
+  script:
+    - pytest
+
+test_externalapi:
+  variables: {}
+  before_script:
+    - pip install --no-cache-dir -r requirements-dev.txt
+  script:
+    - pytest -m externalapi
+  only:
+    - schedules
