@@ -55,9 +55,14 @@ cp .env.example .env
 tools/get-credentials
 ```
   
-* Run the server
+* Run the dev server 
 ```shell
 ./app.py
+```
+
+* Run the production server 
+```shell
+gunicorn -w 4 -b 127.0.0.1:5000 wsgi:app
 ```
 
 ## Docs
