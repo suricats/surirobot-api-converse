@@ -2,19 +2,11 @@ image: python:latest
 stages:
   - test
 
-cache:
-  paths:
-    - .cache/
-    - venv/
-
 test:
   stage: test
   variables: {}
   before_script:
     - tools/get-credentials
-    - pip install virtualenv
-    - virtualenv venv
-    - source venv/bin/activate
     - pip install -r requirements-dev.txt
   script:
     - pytest
@@ -23,9 +15,6 @@ test_externalapi:
   variables: {}
   before_script:
     - tools/get-credentials
-    - pip install virtualenv
-    - virtualenv venv
-    - source venv/bin/activate
     - pip install -r requirements-dev.txt
   script:
     - pytest -m externalapi
