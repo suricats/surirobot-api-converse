@@ -1,18 +1,18 @@
-image: python:latest
+image: python:3.6
 stages:
   - test
+  - build
+  - deploy
 
-test:
+pytest:
   stage: test
-  variables: {}
   before_script:
     - tools/get-credentials
     - pip install -r requirements-dev.txt
   script:
     - pytest
 
-test_externalapi:
-  variables: {}
+pytest_externalapi:
   before_script:
     - tools/get-credentials
     - pip install -r requirements-dev.txt
@@ -20,3 +20,12 @@ test_externalapi:
     - pytest -m externalapi
   only:
     - schedules
+
+build_docker_image:
+  stage: build
+  script:
+    - docker login -u $DOCKERHUB_LOGIN -p $DOCKERHUB_PASSWD
+    - docker build -t surirobot/api-converse .
+    - docker push surirobot/api-converse
+  only:
+    - master
