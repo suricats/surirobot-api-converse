@@ -45,7 +45,7 @@ build_docker_image:
     - tools/get-credentials
   script:
     - docker build -t api-converse .
-    - docker run -v /builds/$CI_PROJECT_PATH/res/credentials:/app/res/credentials api-converse pytest
+    - docker run -v /builds/$CI_PROJECT_PATH/res/credentials:/app/res/credentials --entrypoint pytest api-converse
   only:
     - master
   tags:
