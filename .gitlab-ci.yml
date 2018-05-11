@@ -26,8 +26,13 @@ build_docker_image:
   services:
     - docker:dind
   stage: build
+  before_script:
+    - echo GOOGLE_APPLICATION_CREDENTIALS=$GOOGLE_APPLICATION_CREDENTIALS >> .env
+    - echo REMOTE_DATA_LOGIN=$REMOTE_DATA_LOGIN >> .env
+    - echo REMOTE_DATA_PASSWD=$REMOTE_DATA_PASSWD >> .env
+    - echo DOCKERHUB_LOGIN=$DOCKERHUB_LOGIN >> .env
+    - echo DOCKERHUB_PASSWD=$DOCKERHUB_PASSWD >> .env
   script:
-    - docker info
     - docker login -u $DOCKERHUB_LOGIN -p $DOCKERHUB_PASSWD
     - docker build -t surirobot/api-converse .
     - docker push surirobot/api-converse
