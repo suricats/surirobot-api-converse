@@ -55,7 +55,7 @@ build_docker_image:
 push_to_github:
   stage: github
   script:
-    - apk add --no-cache openssh-client
+    - 'which ssh-agent || ( apt-get update -y && apt-get install openssh-client -y )'
     - mkdir -p ~/.ssh
     - eval $(ssh-agent -s)
     - ssh-add < (echo "$GITHUB_SSH_KEY")
