@@ -8,3 +8,7 @@ res/credentials
 # Not needed inside the container
 *.md
 LICENSE
+
+# Shouldn't be included
+venv
+.cache

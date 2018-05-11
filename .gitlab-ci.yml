@@ -4,18 +4,31 @@ stages:
   - build
   - deploy
 
-pytest:
+variables:
+    PIP_CACHE_DIR: "$CI_PROJECT_DIR/.cache"
+
+cache:
+  - .cache/
+  - venv/
+
+test:
   stage: test
   before_script:
-    - tools/get-credentials
+    - pip install virtualenv
+    - virtualenv venv
+    - source venv/bin/activate
     - pip install -r requirements.txt
+    - tools/get-credentials
   script:
     - pytest
 
-pytest_externalapi:
+test_externalapi:
   before_script:
-    - tools/get-credentials
+    - pip install virtualenv
+    - virtualenv venv
+    - source venv/bin/activate
     - pip install -r requirements.txt
+    - tools/get-credentials
   script:
     - pytest -m externalapi
   only:
@@ -31,7 +44,7 @@ build_docker_image:
     - tools/get-credentials
   script:
     - docker build -t api-converse .
-    - docker run -v $CI_PROJECT_PATH/res/credentials:/app/res/credentials api-converse pytest
+    - docker run -v /builds/$CI_PROJECT_PATH/res/credentials:/app/res/credentials api-converse pytest
   only:
     - master
   tags:
