@@ -8,14 +8,14 @@ pytest:
   stage: test
   before_script:
     - tools/get-credentials
-    - pip install -r requirements-dev.txt
+    - pip install -r requirements.txt
   script:
     - pytest
 
 pytest_externalapi:
   before_script:
     - tools/get-credentials
-    - pip install -r requirements-dev.txt
+    - pip install -r requirements.txt
   script:
     - pytest -m externalapi
   only:
@@ -27,19 +27,10 @@ build_docker_image:
     - docker:dind
   stage: build
   before_script:
-    - echo $GOOGLE_APPLICATION_CREDENTIALS
-    - echo $TEST_VAR
-    - echo GOOGLE_APPLICATION_CREDENTIALS=$GOOGLE_APPLICATION_CREDENTIALS >> .env
-    - echo REMOTE_DATA_LOGIN=$REMOTE_DATA_LOGIN >> .env
-    - echo REMOTE_DATA_PASSWD=$REMOTE_DATA_PASSWD >> .env
-    - echo DOCKERHUB_LOGIN=$DOCKERHUB_LOGIN >> .env
-    - echo DOCKERHUB_PASSWD=$DOCKERHUB_PASSWD >> .env
+    - tools/get-credentials
   script:
-    - echo $GOOGLE_APPLICATION_CREDENTIALS
-    - echo $TEST_VAR
-    - docker login -u $DOCKERHUB_LOGIN -p $DOCKERHUB_PASSWD
-    - docker build -t surirobot/api-converse .
-    - docker push surirobot/api-converse
+    - docker build -t api-converse .
+    - docker run -v ./res/credentials:/app/res/credentials api-converse pytest
   only:
     - master
   tags:
