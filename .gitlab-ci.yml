@@ -2,8 +2,6 @@ image: python:3.6
 stages:
   - test
   - build
-  - github
-  - deploy
 
 variables:
   PIP_CACHE_DIR: "$CI_PROJECT_DIR/.cache"
@@ -51,15 +49,3 @@ build_docker_image:
     - master
   tags:
     - docker
-
-push_to_github:
-  stage: github
-  script:
-    - 'which ssh-agent || ( apt-get update -y && apt-get install openssh-client -y )'
-    - mkdir -p ~/.ssh
-    - eval $(ssh-agent -s)
-    - ssh-add <(echo "$GITHUB_SSH_KEY")
-    - git remote add github git@github.com:suricats/surirobot-api-converse.git
-    - git push github master
-  only:
-    - master
