@@ -1,0 +1,10 @@
+# Don't copy credentials !
+res/credentials
+
+# Env is set at container launch
+.env
+.env.example
+
+# Not needed inside the container
+*.md
+LICENSE
