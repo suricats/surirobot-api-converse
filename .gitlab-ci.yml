@@ -53,13 +53,12 @@ build_docker_image:
     - docker
 
 push_to_github:
-  image: alpine:latest
   stage: github
   script:
     - apk add --no-cache openssh-client
     - mkdir -p ~/.ssh
     - eval $(ssh-agent -s)
-    - ssh-add <(echo "$GITHUB_SSH_KEY")
+    - ssh-add < (echo "$GITHUB_SSH_KEY")
     - git remote add github git@github.com:suricats/surirobot-api-converse.git
     - git push github master
   only:
