@@ -5,11 +5,12 @@ stages:
   - deploy
 
 variables:
-    PIP_CACHE_DIR: "$CI_PROJECT_DIR/.cache"
+  PIP_CACHE_DIR: "$CI_PROJECT_DIR/.cache"
 
 cache:
-  - .cache/
-  - venv/
+  paths:
+    - .cache/
+    - venv/
 
 test:
   stage: test
