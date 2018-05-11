@@ -22,10 +22,16 @@ pytest_externalapi:
     - schedules
 
 build_docker_image:
+  image: docker:stable
+  services:
+    - docker:dind
   stage: build
   script:
+    - docker info
     - docker login -u $DOCKERHUB_LOGIN -p $DOCKERHUB_PASSWD
     - docker build -t surirobot/api-converse .
     - docker push surirobot/api-converse
   only:
     - master
+  tags:
+    - docker
