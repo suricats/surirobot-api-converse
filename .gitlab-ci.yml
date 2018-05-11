@@ -58,7 +58,7 @@ push_to_github:
     - 'which ssh-agent || ( apt-get update -y && apt-get install openssh-client -y )'
     - mkdir -p ~/.ssh
     - eval $(ssh-agent -s)
-    - ssh-add < (echo "$GITHUB_SSH_KEY")
+    - ssh-add <(echo "$GITHUB_SSH_KEY")
     - git remote add github git@github.com:suricats/surirobot-api-converse.git
     - git push github master
   only:
