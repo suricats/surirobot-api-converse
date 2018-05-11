@@ -1,8 +1,0 @@
--r requirements.txt
-
-mock==2.0.0
-pytest==3.5.1
-pytest-cov==2.5.1
-pytest-env==0.6.2
-pytest-sugar==0.9.1
-pytest-flask==0.10.0

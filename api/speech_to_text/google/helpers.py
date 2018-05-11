@@ -1,7 +1,9 @@
+import os
 from google.cloud.speech import SpeechClient, enums, types
 
 from api.exceptions import OperationFailedException
 
+os.environ['GOOGLE_APPLICATION_CREDENTIALS'] = './res/credentials/google.json'
 speech_client = SpeechClient()
 
 
