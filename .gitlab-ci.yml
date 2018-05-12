@@ -20,7 +20,7 @@ test:
     - pip install -r requirements.txt
     - tools/get-credentials
   script:
-    - pytest
+    - pytest --cov=api
 
 test_externalapi:
   before_script:
