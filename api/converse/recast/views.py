@@ -3,14 +3,12 @@ from flask import Blueprint, request, jsonify, Response
 
 from api.exceptions import MissingParameterException, InvalidCredentialsException, \
     BadParameterException, ExternalAPIException, APIException
-from api.text_to_speech.ibm.helpers import ibm_send_request
-from api.text_to_speech.ibm.constants import LANGUAGES_CODE
 
-tts_ibm = Blueprint('tts_ibm', __name__)
+tts_ibm = Blueprint('converse_recast', __name__)
 logger = logging.getLogger(__name__)
 
 
-@tts_ibm.route('/speak', methods=['POST'])
+@tts_ibm.route('/nlp', methods=['GET'])
 def speak():
     errors = []
 
@@ -23,14 +21,8 @@ def speak():
     if errors:
         return jsonify({'errors': errors}), 400
 
-    text = request.json['text']
-    language = request.json['language']
-
-    if language not in LANGUAGES_CODE:
-        return jsonify({'errors': [dict(BadParameterException('language', valid_values=LANGUAGES_CODE))]}), 400
-
     try:
-        res = ibm_send_request(text, language)
+        res = "Hi"
     except InvalidCredentialsException as e:
         return jsonify({'errors': [dict(e)]}), 401
     except ExternalAPIException as e:

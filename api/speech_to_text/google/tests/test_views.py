@@ -36,7 +36,7 @@ def test_recognize_bad_language(mock_google_speech_send_request, client, google_
         }
     )
 
-    expected_result = {'errors': [BadParameterException('language', valid_values=LANGUAGES_CODE).to_dict()]}
+    expected_result = {'errors': [dict(BadParameterException('language', valid_values=LANGUAGES_CODE))]}
 
     assert res.status_code == 400
     assert sorted(json.loads(res.data).items()) == sorted(expected_result.items())
@@ -53,7 +53,7 @@ def test_recognize_missing_language(mock_google_speech_send_request, client, goo
         }
     )
 
-    expected_result = {'errors': [MissingParameterException('language').to_dict()]}
+    expected_result = {'errors': [dict(MissingParameterException('language'))]}
 
     assert res.status_code == 400
     assert sorted(json.loads(res.data).items()) == sorted(expected_result.items())
@@ -70,7 +70,7 @@ def test_recognize_missing_audio_file(mock_google_speech_send_request, client, g
         }
     )
 
-    expected_result = {'errors': [MissingParameterException('audio_file').to_dict()]}
+    expected_result = {'errors': [dict(MissingParameterException('audio_file'))]}
 
     assert res.status_code == 400
     assert sorted(json.loads(res.data).items()) == sorted(expected_result.items())
@@ -87,8 +87,8 @@ def test_recognize_missing_audio_file_and_language(mock_google_speech_send_reque
 
     expected_result = {
         'errors': [
-            MissingParameterException('audio_file').to_dict(),
-            MissingParameterException('language').to_dict()
+            dict(MissingParameterException('audio_file')),
+            dict(MissingParameterException('language'))
         ]
     }
 
