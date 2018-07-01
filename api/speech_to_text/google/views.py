@@ -16,9 +16,9 @@ def recognize():
     errors = []
 
     if 'audio_file' not in request.files:
-        errors.append(MissingParameterException('audio_file').to_dict())
+        errors.append(dict(MissingParameterException('audio_file')))
     if 'language' not in request.form:
-        errors.append(MissingParameterException('language').to_dict())
+        errors.append(dict(MissingParameterException('language')))
 
     if errors:
         return jsonify({'errors': errors}), 400
@@ -27,19 +27,19 @@ def recognize():
     language = request.form['language']
 
     if language not in LANGUAGES_CODE:
-        return jsonify({'errors': [BadParameterException('language', valid_values=LANGUAGES_CODE).to_dict()]}), 400
+        return jsonify({'errors': [dict(BadParameterException('language', valid_values=LANGUAGES_CODE))]}), 400
 
     try:
         file_content = file.read()
     except Exception:
-        return jsonify({'errors': [BadParameterException('audio_file').to_dict()]}), 400
+        return jsonify({'errors': [dict(BadParameterException('audio_file'))]}), 400
 
     try:
         res = google_speech_send_request(file_content, language)
     except OperationFailedException as e:
-        return jsonify({'errors': [e.to_dict()]}), 500
+        return jsonify({'errors': [dict(e)]}), 500
     except Exception as e:
         logger.error(e)
-        return jsonify({'errors': [ExternalAPIException('Google').to_dict()]}), 503
+        return jsonify({'errors': [dict(ExternalAPIException('Google'))]}), 503
 
     return jsonify(res), 200

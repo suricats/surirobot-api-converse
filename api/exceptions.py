@@ -4,11 +4,16 @@ class APIException(Exception):
         self.code = code
         self.msg = msg
 
-    def to_dict(self):
-        return {
-            'code': self.code,
-            'msg': self.msg
-        }
+    def __str__(self):
+        if self.code is None:
+            self.code = 'unknown-error'
+        if self.msg is None:
+            self.msg = '{}: Unexpected error.\nCode: {}'.format(type(self).__name__, self.code)
+        return self.msg
+
+    def __iter__(self):
+        yield 'code', self.code
+        yield 'msg', self.msg
 
 
 class ExternalAPIException(APIException):
