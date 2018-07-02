@@ -3,9 +3,13 @@ import requests
 import json
 
 from api.exceptions import ExternalAPIException, InvalidCredentialsException, OperationFailedException
-token = os.environ.get('RECAST_DEV_TOKEN', '')
-headers = {'Authorization': 'Token ' + token, 'Content-Type': 'application/json'}
 
+
+with open(os.getcwd() + '/res/credentials/recast.json', 'r') as file:
+    RECAST_CREDENTIALS = json.load(file)
+
+token = RECAST_CREDENTIALS['token']
+headers = {'Authorization': 'Token ' + token, 'Content-Type': 'application/json'}
 
 def recast_send_request_dialog(text, id=None):
     if not token:
@@ -27,10 +31,13 @@ def recast_send_request_dialog(text, id=None):
         raise ExternalAPIException(api_name='Recast')
 
 
-def recast_send_request_intent(text, language):
+def recast_send_request_intent(text, language=None):
     if not token:
         raise InvalidCredentialsException('recast')
-    data = json.dumps({'text': text, 'language': language})
+    if language:
+        data = json.dumps({'text': text, 'language': language})
+    else:
+        data = json.dumps({'text': text})
     res = requests.post(url='https://api.recast.ai/v2/request', data=data, headers=headers)
     if res.status_code == 200:
         return res.json()
