@@ -16,6 +16,29 @@ class APIException(Exception):
         yield 'msg', self.msg
 
 
+class MissingHeaderException(APIException):
+    status_code = 400
+
+    def __init__(self, header):
+        super().__init__(
+            'missing_header',
+            '{} is missing.'.format(header)
+        )
+
+
+class BadHeaderException(APIException):
+    status_code = 400
+
+    def __init__(self, header, valid_values=None):
+        msg = '{} is not correct.'.format(header)
+        if valid_values:
+            msg = msg + ' Valid values are: {}'.format(', '.join(valid_values))
+        super().__init__(
+            'bad_header',
+            msg
+        )
+
+
 class ExternalAPIException(APIException):
     def __init__(self, api_name='External'):
         super().__init__(
