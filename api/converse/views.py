@@ -5,59 +5,27 @@ from api.exceptions import MissingParameterException, InvalidCredentialsExceptio
     BadParameterException, ExternalAPIException, APIException, MissingHeaderException, BadHeaderException, OperationFailedException
 
 from api.speech_to_text.google.constants import LANGUAGES_CODE
+from api.converse.constants import AUDIO_FORMATS, TEXT_FORMATS, SUPPORTED_FORMATS
 import api.speech_to_text.google.helpers as stt
 import api.text_to_speech.ibm.helpers as tts
-
-converse_recast = Blueprint('converse_recast', __name__)
+import api.nlp.recast.helpers as nlp
+converse = Blueprint('converse', __name__)
 logger = logging.getLogger(__name__)
 
 
-AUDIO_FORMATS = [
-    'multipart/form-data'
-]
-TEXT_FORMATS = [
-    'application/json'
-]
-SUPPORTED_FORMATS = AUDIO_FORMATS + TEXT_FORMATS
-
-
-@converse_recast.route('/text', methods=['POST'])
-def get_text():
+@converse.route('/text', methods=['POST'], defaults={'want': 'text'})
+@converse.route('/audio', methods=['POST'],  defaults={'want': 'audio'})
+def conversation(want):
+    print(want)
     errors = []
-    if request.json:
-        if 'text' not in request.json:
-            errors.append(dict(MissingParameterException('text')))
-
-        if 'language' not in request.json:
-            errors.append(dict(MissingParameterException('language')))
-
-        if errors:
-            return jsonify({'errors': errors}), 400
-
-        try:
-            res = "Hi"
-        except InvalidCredentialsException as e:
-            return jsonify({'errors': [dict(e)]}), 401
-        except ExternalAPIException as e:
-            return jsonify({'errors': [dict(e)]}), 503
-        except Exception as e:
-            logger.error(e)
-            return jsonify({'errors': [dict(APIException())]}), 500
-
-        return Response(res, mimetype="audio/wav", status=200)
-    else:
-        errors.append(dict(APIException('no_content')))
-        return jsonify({'errors': errors}), 400
-
-
-@converse_recast.route('/audio', methods=['POST'])
-def get_audio():
-    errors = []
+    user_id = None
     type, errors, code = checkRequest(request)
     if errors:
         return jsonify({'errors': errors}), code
 
     if type == 'audio':
+        if 'user_id' in request.form:
+            user_id = request.form['user_id']
         audio = request.files['audio']
         language = request.form['language']
         if language not in LANGUAGES_CODE:
@@ -71,7 +39,7 @@ def get_audio():
             res = stt.google_speech_send_request(file_content, language)
             text = res["text"]
             stt_confidence = res["confidence"]
-            return jsonify(text), 200
+
         except OperationFailedException as e:
             return jsonify({'errors': [dict(APIException(code='stt_error', msg=str(e)))]}), 500
         except Exception as e:
@@ -79,20 +47,18 @@ def get_audio():
             return jsonify({'errors': [dict(ExternalAPIException('Google'))]}), 503
     # Case: input is text
     elif type == 'text':
-        if 'text' not in request.json:
-            errors.append(dict(MissingParameterException('text')))
-
-        if 'language' not in request.json:
-            errors.append(dict(MissingParameterException('language')))
-
-        if errors:
-            return jsonify({'errors': errors}), 400
+        if 'user_id' in request.json:
+            user_id = request.json['user_id']
         text = request.json['text']
         language = request.json['language']
         if language not in LANGUAGES_CODE:
             return jsonify({'errors': [dict(BadParameterException('language', valid_values=LANGUAGES_CODE))]}), 400
 
-        return jsonify(request.json["text"]), 200
+    # NLP
+    res_nlp = nlp.recast_send_request_dialog(text, user_id)
+    message = res_nlp['results']['messages'][0]['content']
+    intent = res_nlp['results']['nlp']['intents'][0]['slug']
+    return jsonify({'message': message, 'intent': intent}), 200
 
 
 def checkRequest(request):
