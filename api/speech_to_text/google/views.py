@@ -15,7 +15,7 @@ logger = logging.getLogger(__name__)
 def recognize():
     errors = []
 
-    if 'audio_file' not in request.files:
+    if 'audio' not in request.files:
         errors.append(dict(MissingParameterException('audio_file')))
     if 'language' not in request.form:
         errors.append(dict(MissingParameterException('language')))
@@ -23,7 +23,7 @@ def recognize():
     if errors:
         return jsonify({'errors': errors}), 400
 
-    file = request.files['audio_file']
+    file = request.files['audio']
     language = request.form['language']
 
     if language not in LANGUAGES_CODE:

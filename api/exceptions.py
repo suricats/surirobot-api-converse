@@ -1,4 +1,6 @@
 class APIException(Exception):
+    status_code = 500
+
     def __init__(self, code='api_error', msg='Unexpected error'):
         super().__init__(msg)
         self.code = code
@@ -40,14 +42,18 @@ class BadHeaderException(APIException):
 
 
 class ExternalAPIException(APIException):
+    status_code = 503
+
     def __init__(self, api_name='External', description=None):
         super().__init__(
             'external_api_error',
-            '{} API is not working properly\n{}'.format(api_name, description)
+            '{} API is not working properly\nDetails: {}'.format(api_name, description)
         )
 
 
 class InvalidCredentialsException(APIException):
+    status_code = 401
+
     def __init__(self, api_name='External'):
         super().__init__(
             'invalid_credentials_error',
@@ -56,6 +62,8 @@ class InvalidCredentialsException(APIException):
 
 
 class OperationFailedException(APIException):
+    status_code = 500
+
     def __init__(self):
         super().__init__(
             'operation_failed',

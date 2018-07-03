@@ -4,8 +4,8 @@ from flask import Blueprint, request, jsonify, Response
 from api.exceptions import MissingParameterException, InvalidCredentialsException, \
     BadParameterException, ExternalAPIException, APIException, MissingHeaderException, BadHeaderException, OperationFailedException
 
-from api.speech_to_text.google.constants import LANGUAGES_CODE
-from api.converse.constants import AUDIO_FORMATS, TEXT_FORMATS, SUPPORTED_FORMATS
+from api.speech_to_text.google.constants import LANGUAGES_CODE, SIMPLIFIED_LANGUAGES_CODE
+from .constants import AUDIO_FORMATS, TEXT_FORMATS, SUPPORTED_FORMATS, DEFAULT_INTENT
 import api.speech_to_text.google.helpers as stt
 import api.text_to_speech.ibm.helpers as tts
 import api.nlp.recast.helpers as nlp
@@ -16,8 +16,8 @@ logger = logging.getLogger(__name__)
 @converse.route('/text', methods=['POST'], defaults={'want': 'text'})
 @converse.route('/audio', methods=['POST'],  defaults={'want': 'audio'})
 def conversation(want):
-    print(want)
     errors = []
+    output = {}
     user_id = None
     type, errors, code = checkRequest(request)
     if errors:
@@ -40,8 +40,12 @@ def conversation(want):
             text = res["text"]
             stt_confidence = res["confidence"]
 
+            output['input'] = text
+            output['stt_confidence'] = stt_confidence
         except OperationFailedException as e:
-            return jsonify({'errors': [dict(APIException(code='stt_error', msg=str(e)))]}), 500
+            logger.error(e)
+            api_e = APIException(code='stt_error', msg=str(e))
+            return jsonify({'errors': [dict(api_e)]}), api_e.status_code
         except Exception as e:
             logger.error(e)
             return jsonify({'errors': [dict(ExternalAPIException('Google'))]}), 503
@@ -51,14 +55,50 @@ def conversation(want):
             user_id = request.json['user_id']
         text = request.json['text']
         language = request.json['language']
+
+        output['input'] = text
         if language not in LANGUAGES_CODE:
             return jsonify({'errors': [dict(BadParameterException('language', valid_values=LANGUAGES_CODE))]}), 400
 
-    # NLP
-    res_nlp = nlp.recast_send_request_dialog(text, user_id)
-    message = res_nlp['results']['messages'][0]['content']
-    intent = res_nlp['results']['nlp']['intents'][0]['slug']
-    return jsonify({'message': message, 'intent': intent}), 200
+    # Analyze the text
+    try:
+        res_nlp = nlp.recast_send_request_dialog(text, user_id, SIMPLIFIED_LANGUAGES_CODE[language])
+        output['nlp'] = res_nlp
+        if not res_nlp['results']['messages']:
+            message = ""
+        else:
+            message = res_nlp['results']['messages'][0]['content']
+        if not res_nlp['results']['nlp']['intents']:
+            output['intent'] = DEFAULT_INTENT
+        else:
+            output['intent'] = res_nlp['results']['nlp']['intents'][0]['slug']
+        output['message'] = message
+    except (InvalidCredentialsException, ExternalAPIException) as e:
+        return jsonify({'errors': [dict(e)]}), e.status_code
+    except Exception as e:
+        logger.error(e)
+        api_e = APIException(code='nlp_error', msg=str(e))
+        return jsonify({'errors': [dict(api_e)]}), api_e.status_code
+
+    # Send the result
+    if want == 'text':
+        return jsonify(output), 200
+    elif want == 'audio':
+        try:
+            res_tts = tts.ibm_send_request(message, language)
+        except (InvalidCredentialsException, ExternalAPIException) as e:
+            return jsonify({'errors': [dict(e)]}), e.status_code
+        except Exception as e:
+            logger.error(e)
+            api_e = APIException(code='tts_error', msg=str(e))
+            return jsonify({'errors': [dict(api_e)]}), api_e.status_code
+
+        response = Response(res_tts, mimetype="audio/wav", status=200)
+        response.headers['JSON'] = jsonify(output)
+        return response
+    else:
+        # Impossible !
+        return jsonify({'errors': [dict(APIException(code='invalid_output_format_requested'))]}), 500
 
 
 def checkRequest(request):
