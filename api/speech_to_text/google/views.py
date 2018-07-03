@@ -16,7 +16,7 @@ def recognize():
     errors = []
 
     if 'audio' not in request.files:
-        errors.append(dict(MissingParameterException('audio_file')))
+        errors.append(dict(MissingParameterException('audio')))
     if 'language' not in request.form:
         errors.append(dict(MissingParameterException('language')))
 
@@ -32,7 +32,7 @@ def recognize():
     try:
         file_content = file.read()
     except Exception:
-        return jsonify({'errors': [dict(BadParameterException('audio_file'))]}), 400
+        return jsonify({'errors': [dict(BadParameterException('audio'))]}), 400
 
     try:
         res = google_speech_send_request(file_content, language)
