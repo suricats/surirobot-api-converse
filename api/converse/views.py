@@ -33,7 +33,7 @@ def conversation(want):
         try:
             file_content = audio.read()
         except Exception:
-            return jsonify({'errors': [dict(BadParameterException('audio_file'))]}), 400
+            return jsonify({'errors': [dict(BadParameterException('audio'))]}), 400
 
         try:
             res = stt.google_speech_send_request(file_content, language)
@@ -111,7 +111,7 @@ def checkRequest(request):
     # Case: input is audio
     if content_type.startswith(tuple(AUDIO_FORMATS)):
         if 'audio' not in request.files:
-            errors.append(dict(MissingParameterException('audio_file')))
+            errors.append(dict(MissingParameterException('audio')))
         if 'language' not in request.form:
             errors.append(dict(MissingParameterException('language')))
         return 'audio', errors, 400 if errors else 200
