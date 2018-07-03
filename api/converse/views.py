@@ -51,8 +51,7 @@ def conversation(want):
             return jsonify({'errors': [dict(ExternalAPIException('Google'))]}), 503
     # Case: input is text
     elif type == 'text':
-        if 'user_id' in request.json:
-            user_id = request.json['user_id']
+        user_id = request.json.get('user_id')
         text = request.json['text']
         language = request.json['language']
 

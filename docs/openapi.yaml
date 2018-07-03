@@ -2,14 +2,14 @@ openapi: 3.0.0
 info:
   title: API Converse
   version: v2
-  description: This API contains all the endpoints needed by the surirobot to be able to handle a conversation with humans being.
+  description: This API contains all the endpoints needed by the Surirobot to be able to handle a conversation with humans being.
 servers:
   - url: 'https://converse.api.suricats-consulting.com/api'
     description: Main (production) server
   - url: 'https://converse.api.surirobot.fr/api'
     description: Dev server
 paths:
-  /stt/google/recognize:
+  /stt/recognize:
     post:
       summary: Convert voice to text using Google Cloud Speech API
       operationId: sttGoogleRecognize
@@ -46,7 +46,7 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/ErrorResponse'
-  /tts/ibm/speak:
+  /tts/speak:
     post:
       summary: Convert text to voice using IBM Watson API
       operationId: ttsIbmSpeak
@@ -66,7 +66,7 @@ paths:
               schema:
                 $ref: '#/components/schemas/TTSIBMReponse'
         400:
-          description: Wrong parameter(s)
+          description: Wrong parameter(s) or empty body
           content:
             application/json:
               schema:
@@ -85,6 +85,222 @@ paths:
                 $ref: '#/components/schemas/ErrorResponse'
         503:
           description: IBM API is not available
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+  /nlp/answer:
+    post:
+      summary: Analyze a text and give results and a proper response
+      operationId: nlpRecastAnswer
+      tags:
+        - NLP
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/NLPRecastAnswerRequest'
+      responses:
+        200:
+          description: Operation successful
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NLPRecastAnswerResponse'
+        400:
+          description: Wrong parameter(s) or empty body
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        401:
+          description: Invalid credentials
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        500:
+          description: API Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        503:
+          description: Recast API is not available
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+  /nlp/intent:
+    post:
+      summary: Analyze a text and give its intention
+      operationId: nlpRecastIntent
+      tags:
+        - NLP
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/NLPRecastIntentRequest'
+      responses:
+        200:
+          description: Operation successful
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NLPRecastIntentResponse'
+        400:
+          description: Wrong parameter(s) or empty body
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
+        401:
+          description: Invalid credentials
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        500:
+          description: API Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        503:
+          description: Recast API is not available
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+  /nlp/memory:
+    post:
+      summary: Update or delete memory
+      operationId: nlpRecastAnswer
+      tags:
+        - NLP
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/NLPRecastMemoryRequest'
+      responses:
+        200:
+          description: Operation successful
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NLPRecastMemoryResponse'
+        400:
+          description: Wrong parameter(s)
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        401:
+          description: Invalid credentials
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        500:
+          description: API Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        503:
+          description: Recast API is not available
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+  /converse/text:
+    post:
+      summary: Provides a textual response of user input
+      operationId: converseText
+      tags:
+        - Converse
+      requestBody:
+        required: true
+        content:
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/ConverseAudioRequest'
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ConverseTextRequest'
+      responses:
+        200:
+          description: Operation successful
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ConverseAudioResponse'
+        400:
+          description: Wrong parameter(s)
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        500:
+          description: API Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        503:
+          description: Google API is not available
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+  /converse/audio:
+    post:
+      summary: Provides a audio response of user input
+      operationId: converseAudio
+      tags:
+        - Converse
+      requestBody:
+        required: true
+        content:
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/ConverseAudioRequest'
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ConverseTextRequest'
+      responses:
+        200:
+          description: Operation successful
+          headers:
+            JSON:
+              schema:
+                type : string
+                format: json
+              description: Contains all informations equivalent to /text
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ConverseAudioRequest'
+        400:
+          description: Wrong parameter(s)
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        500:
+          description: API Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        503:
+          description: Google API is not available
           content:
             application/json:
               schema:
@@ -129,6 +345,187 @@ components:
     TTSIBMReponse:
       type: string
       format: binary
+    NLPRecastAnswerRequest:
+      required:
+        - text
+        - language
+      properties:
+        text:
+          type: string
+        language:
+          type: string
+          enum:
+            - fr
+            - en
+        user_id:
+          type: string
+    NLPRecastAnswerResponse:
+      required:
+        - conversation
+        - messages
+        - nlp
+      properties:
+        conversation:
+          type: string
+          format: json
+        messages:
+          type: string
+          format: json
+        nlp:
+          type: string
+          format: json
+    NLPRecastIntentRequest:
+      required:
+        - text
+      properties:
+        text:
+          type: string
+        language:
+          type: string
+          enum:
+            - fr
+            - en
+        user_id:
+          type: string
+    NLPRecastIntentResponse:
+      required:
+        - act
+        - entities
+        - intents
+        - language
+        - processing_language
+        - sentiment
+        - source
+        - status
+        - timestamp
+        - uuid
+        - version
+      properties:
+        act:
+          type: string
+          format: json
+        entities:
+          type: string
+          format: json
+        intents:
+          type: string
+          format: json
+        language:
+          type: string
+        processing_language:
+          type: string
+        sentiment:
+          type: string
+          format: json
+        source:
+          type: string
+          format: json
+        status:
+          type: string
+          format: json
+        timestamp:
+          type: string
+          format: date-time
+        type:
+          type: string
+        uuid:
+          type: string
+        version:
+          type: string
+    NLPRecastMemoryRequest:
+      required:
+        - field
+        - user_id
+      properties:
+        field:
+          type: string
+        value:
+          type: string
+        user_id:
+          type: string
+    NLPRecastMemoryResponse:
+      required:
+        - builder
+        - conversation_id
+        - id
+        - language
+        - memory
+        - skill
+        - skill_occurences
+        - skill_stack
+      properties:
+        builder:
+          type: string
+          format: json
+        conversation_id:
+          type: string
+        id:
+          type: string
+        language:
+          type: string
+        memory:
+          type: string
+          format: json
+        skill:
+          type: string
+        skill_occurences:
+          type: integer
+        skill_stack:
+          type: string
+          format: json
+    ConverseTextRequest:
+      required:
+        - text
+        - language
+        - user_id
+      properties:
+        text:
+          type: string
+        language:
+          type: string
+          enum:
+            - fr-FR
+            - en-US
+        user_id:
+          type: string
+    ConverseAudioRequest:
+      required:
+        - audio
+        - language
+        - user_id
+      properties:
+        audio:
+          type: string
+          format: binary
+        language:
+          type: string
+          enum:
+            - fr-FR
+            - en-US
+        user_id:
+          type: string
+    ConverseTextResponse:
+      required:
+        - input
+        - intent
+        - message
+        - nlp
+      properties:
+        input:
+          type: string
+        intent:
+          type: string
+        message:
+          type: string
+        nlp:
+          type: string
+          format: json
+        stt_confidence:
+          type: number
+          format: float
+    ConverseAudioResponse:
+        type: string
+        format: binary
     Error:
       required:
         - code
@@ -137,11 +534,14 @@ components:
         code:
           type: string
           enum:
+            - missing_header
+            - bad_header
             - api_error
             - external_api_error
             - invalid_credentials_error
             - operation_failed
             - missing_parameter
+            - resource_not_found
             - bad_parameter
         msg:
           type: string

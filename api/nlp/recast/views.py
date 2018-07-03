@@ -99,7 +99,7 @@ def memory():
         user_id = request.json['user_id']
         try:
             res = recast_send_request_memory(field, user_id, value)
-            return jsonify(res), 200
+            return jsonify(res['results']), 200
         except ResourceNotFoundException as e:
             return jsonify({'errors': [dict(e)]}), 404
         except InvalidCredentialsException as e:
