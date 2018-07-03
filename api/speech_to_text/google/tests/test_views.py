@@ -16,7 +16,7 @@ def test_recognize_success(mock_google_speech_send_request, client, google_reque
         content_type='multipart/form-data',
         data={
             'language': google_request['language'],
-            'audio_file': (io.BytesIO(google_request['file']), 'audio.wav')
+            'audio': (io.BytesIO(google_request['file']), 'audio.wav')
         }
     )
 
@@ -32,7 +32,7 @@ def test_recognize_bad_language(mock_google_speech_send_request, client, google_
         content_type='multipart/form-data',
         data={
             'language': 'xx-XX',
-            'audio_file': (io.BytesIO(google_request['file']), 'audio.wav')
+            'audio': (io.BytesIO(google_request['file']), 'audio.wav')
         }
     )
 
@@ -49,7 +49,7 @@ def test_recognize_missing_language(mock_google_speech_send_request, client, goo
         url_for('stt_google.recognize'),
         content_type='multipart/form-data',
         data={
-            'audio_file': (io.BytesIO(google_request['file']), 'audio.wav')
+            'audio': (io.BytesIO(google_request['file']), 'audio.wav')
         }
     )
 
@@ -70,7 +70,7 @@ def test_recognize_missing_audio_file(mock_google_speech_send_request, client, g
         }
     )
 
-    expected_result = {'errors': [dict(MissingParameterException('audio_file'))]}
+    expected_result = {'errors': [dict(MissingParameterException('audio'))]}
 
     assert res.status_code == 400
     assert sorted(json.loads(res.data).items()) == sorted(expected_result.items())
@@ -87,7 +87,7 @@ def test_recognize_missing_audio_file_and_language(mock_google_speech_send_reque
 
     expected_result = {
         'errors': [
-            dict(MissingParameterException('audio_file')),
+            dict(MissingParameterException('audio')),
             dict(MissingParameterException('language'))
         ]
     }

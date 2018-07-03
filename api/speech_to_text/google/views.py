@@ -15,15 +15,15 @@ logger = logging.getLogger(__name__)
 def recognize():
     errors = []
 
-    if 'audio_file' not in request.files:
-        errors.append(dict(MissingParameterException('audio_file')))
+    if 'audio' not in request.files:
+        errors.append(dict(MissingParameterException('audio')))
     if 'language' not in request.form:
         errors.append(dict(MissingParameterException('language')))
 
     if errors:
         return jsonify({'errors': errors}), 400
 
-    file = request.files['audio_file']
+    file = request.files['audio']
     language = request.form['language']
 
     if language not in LANGUAGES_CODE:
@@ -32,7 +32,7 @@ def recognize():
     try:
         file_content = file.read()
     except Exception:
-        return jsonify({'errors': [dict(BadParameterException('audio_file'))]}), 400
+        return jsonify({'errors': [dict(BadParameterException('audio'))]}), 400
 
     try:
         res = google_speech_send_request(file_content, language)

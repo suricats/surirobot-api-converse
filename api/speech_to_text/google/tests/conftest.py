@@ -7,8 +7,8 @@ from mock import Mock
 @pytest.fixture()
 def google_request():
     file = os.getcwd() + '/api/speech_to_text/tests/fixtures/audio.wav'
-    with io.open(file, 'rb') as audio_file:
-        content = audio_file.read()
+    with io.open(file, 'rb') as audio:
+        content = audio.read()
     return {
         'file': content,
         'language': 'fr-FR'
