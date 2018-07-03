@@ -40,10 +40,10 @@ class BadHeaderException(APIException):
 
 
 class ExternalAPIException(APIException):
-    def __init__(self, api_name='External'):
+    def __init__(self, api_name='External', description=None):
         super().__init__(
             'external_api_error',
-            '{} API is not working properly'.format(api_name)
+            '{} API is not working properly\n{}'.format(api_name, description)
         )
 
 
@@ -68,6 +68,14 @@ class MissingParameterException(APIException):
         super().__init__(
             'missing_parameter',
             '{} is missing.'.format(parameter)
+        )
+
+
+class ResourceNotFoundException(APIException):
+    def __init__(self, parameter):
+        super().__init__(
+            'resource_not_found',
+            "{} can't be found.".format(parameter)
         )
 
 

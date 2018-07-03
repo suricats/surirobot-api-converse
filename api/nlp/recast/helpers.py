@@ -2,8 +2,8 @@ import os
 import requests
 import json
 
-from api.exceptions import ExternalAPIException, InvalidCredentialsException, OperationFailedException
-
+from api.exceptions import ExternalAPIException, InvalidCredentialsException, OperationFailedException, ResourceNotFoundException
+from .constants import TEST_TEXT, DEFAULT_ID
 
 with open(os.getcwd() + '/res/credentials/recast.json', 'r') as file:
     RECAST_CREDENTIALS = json.load(file)
@@ -11,11 +11,12 @@ with open(os.getcwd() + '/res/credentials/recast.json', 'r') as file:
 token = RECAST_CREDENTIALS['token']
 headers = {'Authorization': 'Token ' + token, 'Content-Type': 'application/json'}
 
+
 def recast_send_request_dialog(text, id=None):
     if not token:
         raise InvalidCredentialsException('recast')
-    if not id:
-        id = "DEFAULT"
+    if id is None:
+        id = DEFAULT_ID
     data = json.dumps(
     {'message': {
         'content': text,
@@ -28,7 +29,7 @@ def recast_send_request_dialog(text, id=None):
     elif res.status_code == 401:
         raise InvalidCredentialsException(api_name='Recast')
     else:
-        raise ExternalAPIException(api_name='Recast')
+        raise ExternalAPIException(api_name='Recast', description='dialog')
 
 
 def recast_send_request_intent(text, language=None):
@@ -44,17 +45,41 @@ def recast_send_request_intent(text, language=None):
     elif res.status_code == 401:
         raise InvalidCredentialsException(api_name='Recast')
     else:
-        raise ExternalAPIException(api_name='Recast')
+        raise ExternalAPIException(api_name='Recast', description='intent')
 
 
-def recast_send_request_memory(field, value, user_id):
+def recast_send_request_memory(field, user_id, value=None):
     if not token:
         raise InvalidCredentialsException('recast')
-    # IN PROGRESS
-    res = {}
+    url = 'https://api.recast.ai/build/v1/users/' + RECAST_CREDENTIALS['user_slug'] + '/bots/' + RECAST_CREDENTIALS['bot_slug'] + '/builders/v1/conversation_states/' + user_id
+    res = requests.get(url=url, headers=headers)
+    if res.status_code == 404:
+        # Case: user conversation doesn't exist yet
+        test = recast_send_request_dialog(TEST_TEXT, user_id)
+        print(test)
+        res = requests.get(url=url, headers=headers)
     if res.status_code == 200:
-        return res.json()
+        memory = res.json()['results']['memory']
+        # Case: deleting memory field
+        if value is None and memory.get(field) is not None:
+            del memory[field]
+        # Case: replacing username
+        if field == 'username':
+            memory['username'] = {
+                "fullname": value,
+                "raw": value,
+                "confidence": 0.99
+            }
+        # Update the memory
+        data = json.dumps({'memory': memory})
+        res1 = requests.put(url=url, data=data, headers=headers)
+        if res1.status_code == 200:
+            return res1.json()
+        elif res.status_code == 401:
+            raise InvalidCredentialsException(api_name='Recast')
+        else:
+            raise ExternalAPIException(api_name='Recast', description='memory_update({})'.format(res1.status_code))
     elif res.status_code == 401:
         raise InvalidCredentialsException(api_name='Recast')
     else:
-        raise ExternalAPIException(api_name='Recast')
+        raise ExternalAPIException(api_name='Recast', description='memory_get({})'.format(res.status_code))
