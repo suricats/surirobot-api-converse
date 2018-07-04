@@ -8,6 +8,8 @@ servers:
     description: Main (production) server
   - url: 'https://converse.api.surirobot.fr/api'
     description: Dev server
+  - url: 'http://localhost:5000/api'
+    description: Local server
 paths:
   /stt/recognize:
     post:
