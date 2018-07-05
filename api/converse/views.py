@@ -1,14 +1,16 @@
 import logging
+import json
 from flask import Blueprint, request, jsonify, Response
 
 from api.exceptions import MissingParameterException, InvalidCredentialsException, \
     BadParameterException, ExternalAPIException, APIException, MissingHeaderException, BadHeaderException, OperationFailedException
 
 from api.speech_to_text.google.constants import LANGUAGES_CODE, SIMPLIFIED_LANGUAGES_CODE
-from .constants import AUDIO_FORMATS, TEXT_FORMATS, SUPPORTED_FORMATS, DEFAULT_INTENT
+from .constants import AUDIO_FORMATS, TEXT_FORMATS, SUPPORTED_FORMATS, DEFAULT_INTENT, CUSTOM_MESSAGES
 import api.speech_to_text.google.helpers as stt
 import api.text_to_speech.ibm.helpers as tts
 import api.nlp.recast.helpers as nlp
+import dateutil.parser as dp
 converse = Blueprint('converse', __name__)
 logger = logging.getLogger(__name__)
 
@@ -68,17 +70,21 @@ def conversation(want):
         else:
             message = res_nlp['results']['messages'][0]['content']
         if not res_nlp['results']['nlp']['intents']:
-            output['intent'] = DEFAULT_INTENT
+            intent = DEFAULT_INTENT
+            message = CUSTOM_MESSAGES[SIMPLIFIED_LANGUAGES_CODE[language]]["not-understand"]
         else:
-            output['intent'] = res_nlp['results']['nlp']['intents'][0]['slug']
+            intent = res_nlp['results']['nlp']['intents'][0]['slug']
         output['message'] = message
+        output['intent'] = intent
     except (InvalidCredentialsException, ExternalAPIException) as e:
         return jsonify({'errors': [dict(e)]}), e.status_code
     except Exception as e:
         logger.error(e)
+        #msg = "{}: {}".format(e, type(e).__name__)
         api_e = APIException(code='nlp_error', msg=str(e))
         return jsonify({'errors': [dict(api_e)]}), api_e.status_code
-
+    # Check special intents
+    checkSpecialIntent(intent, res_nlp['results']['nlp'], language)
     # Send the result
     if want == 'text':
         return jsonify(output), 200
@@ -99,6 +105,15 @@ def conversation(want):
         # Impossible !
         return jsonify({'errors': [dict(APIException(code='invalid_output_format_requested'))]}), 500
 
+
+def checkSpecialIntent(intent, nlp, language):
+    print(nlp)
+    if intent == "get-weather":
+        if nlp['entities'].get('datetime') and nlp['entities'].get('location'):
+            latitude = nlp['entities']['location'][0]['lat']
+            longitude = nlp['entities']['location'][0]['lng']
+            time = dp.parse(nlp['entities']['datetime'][0]['iso']).strftime('%s')
+            data = json.dumps({'latitude': latitude, 'longitude': longitude, 'time': time, 'language': SIMPLIFIED_LANGUAGES_CODE[language]})
 
 def checkRequest(request):
     errors = []
