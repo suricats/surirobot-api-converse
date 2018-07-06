@@ -1,19 +1,26 @@
 import logging
 import json
+import os
+import requests
+import time as t
 from flask import Blueprint, request, jsonify, Response
+import timezonefinder
+from datetime import datetime
+from dateutil import tz
 
 from api.exceptions import MissingParameterException, InvalidCredentialsException, \
     BadParameterException, ExternalAPIException, APIException, MissingHeaderException, BadHeaderException, OperationFailedException
 
-from api.speech_to_text.google.constants import LANGUAGES_CODE, SIMPLIFIED_LANGUAGES_CODE
 from .constants import AUDIO_FORMATS, TEXT_FORMATS, SUPPORTED_FORMATS, DEFAULT_INTENT, CUSTOM_MESSAGES
+from .helpers import get_weather, get_crypto, get_news
+from api.speech_to_text.google.constants import LANGUAGES_CODE, SIMPLIFIED_LANGUAGES_CODE
+
 import api.speech_to_text.google.helpers as stt
 import api.text_to_speech.ibm.helpers as tts
 import api.nlp.recast.helpers as nlp
 import dateutil.parser as dp
 converse = Blueprint('converse', __name__)
 logger = logging.getLogger(__name__)
-
 
 @converse.route('/text', methods=['POST'], defaults={'want': 'text'})
 @converse.route('/audio', methods=['POST'],  defaults={'want': 'audio'})
@@ -24,7 +31,7 @@ def conversation(want):
     type, errors, code = checkRequest(request)
     if errors:
         return jsonify({'errors': errors}), code
-
+    # Case: input is audio
     if type == 'audio':
         if 'user_id' in request.form:
             user_id = request.form['user_id']
@@ -74,17 +81,27 @@ def conversation(want):
             message = CUSTOM_MESSAGES[SIMPLIFIED_LANGUAGES_CODE[language]]["not-understand"]
         else:
             intent = res_nlp['results']['nlp']['intents'][0]['slug']
-        output['message'] = message
-        output['intent'] = intent
     except (InvalidCredentialsException, ExternalAPIException) as e:
         return jsonify({'errors': [dict(e)]}), e.status_code
     except Exception as e:
         logger.error(e)
-        #msg = "{}: {}".format(e, type(e).__name__)
+        # msg = "{}: {}".format(e, type(e).__name__)
         api_e = APIException(code='nlp_error', msg=str(e))
         return jsonify({'errors': [dict(api_e)]}), api_e.status_code
     # Check special intents
-    checkSpecialIntent(intent, res_nlp['results']['nlp'], language)
+    try:
+        spec_message = checkSpecialIntent(intent, res_nlp['results']['nlp'], SIMPLIFIED_LANGUAGES_CODE[language])
+        if spec_message:
+            message = spec_message
+    except (InvalidCredentialsException, ExternalAPIException) as e:
+        return jsonify({'errors': [dict(e)]}), e.status_code
+    except Exception as e:
+        logger.error(e)
+        api_e = APIException(code='services_error', msg=str(e))
+        return jsonify({'errors': [dict(api_e)]}), api_e.status_code
+    # Regroup informations
+    output['message'] = message
+    output['intent'] = intent
     # Send the result
     if want == 'text':
         return jsonify(output), 200
@@ -107,13 +124,36 @@ def conversation(want):
 
 
 def checkSpecialIntent(intent, nlp, language):
-    print(nlp)
+    message = None
+    # Case: weather
     if intent == "get-weather":
-        if nlp['entities'].get('datetime') and nlp['entities'].get('location'):
+        if nlp['entities'].get('location'):
             latitude = nlp['entities']['location'][0]['lat']
             longitude = nlp['entities']['location'][0]['lng']
-            time = dp.parse(nlp['entities']['datetime'][0]['iso']).strftime('%s')
-            data = json.dumps({'latitude': latitude, 'longitude': longitude, 'time': time, 'language': SIMPLIFIED_LANGUAGES_CODE[language]})
+            if nlp['entities'].get('datetime'):
+                time = dp.parse(nlp['entities']['datetime'][0]['iso']).strftime('%s')
+            else:
+                time = int(t.time())
+            res = get_weather(latitude, longitude, time, language)
+            tf = timezonefinder.TimezoneFinder()
+            current_tz = tz.gettz(tf.timezone_at(lng=longitude, lat=latitude))
+            local_time = datetime.fromtimestamp(time).replace(tzinfo=current_tz)
+            if language == 'fr':
+                message = 'La météo pour {} le {}: {} avec une temperature de {} °C'.format(nlp['entities']['location'][0]['formatted'], local_time.strftime("%d/%m/%Y à %Hh%M"), res['summary'], res['temperature'])
+            else:
+                message = 'The weather for {} at {}: {} with a temperature of {} °C'.format(nlp['entities']['location'][0]['formatted'], local_time.strftime("%d/%m/%Y à %Hh%M"), res['summary'], res['temperature'])
+        if nlp['entities'].get('cryptomonnaie'):
+            crypto = nlp['entities']['cryptomonnaie'][0]['value']
+            res = get_crypto(crypto)
+            if language == 'fr':
+                message = 'La cryptomonnaie {0} vaut actuellement {1:.2f} € et a évolué de {2:.2f} % depuis les dernières 24h'.format(crypto, res['value'], res['evolution'])
+            else:
+                message = 'The cryptocurrency {0} vaut actuellement {1:.2f} € et a évolué de {2:.2f} % depuis les dernières 24h'.format(crypto, res['value'], res['evolution'])
+    if intent == "news":
+        res = get_news()
+        message = res['message']
+    return message
+
 
 def checkRequest(request):
     errors = []

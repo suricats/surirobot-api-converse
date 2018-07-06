@@ -1,4 +1,5 @@
 python-dateutil
+timezonefinder
 aniso8601==3.0.0
 attrs==18.1.0
 cachetools==2.0.1
