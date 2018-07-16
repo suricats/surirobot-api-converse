@@ -311,10 +311,10 @@ components:
   schemas:
     STTGoogleRequest:
       required:
-        - audio_file
+        - audio
         - language
       properties:
-        audio_file:
+        audio:
           type: string
           format: binary
         language:
