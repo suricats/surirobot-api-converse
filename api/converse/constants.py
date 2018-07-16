@@ -10,9 +10,13 @@ DEFAULT_INTENT = "no-understand"
 
 CUSTOM_MESSAGES = {
 "fr": {
-    "not-understand": "Pardonnez-moi, je n'ai pas compris ce que vous avez dit."
+    "not-understand": "Pardonnez-moi, je n'ai pas compris ce que vous avez dit.",
+    "not-heard": "Pardonnez-moi, je n'ai pas entendu ce que vous avez dit.",
+    "resource-not-found": "Désolé, je n'arrive pas à trouver l'information demandée."
 },
 "en": {
-    "not-understand": "Sorry I didn't understand what you said."
+    "not-understand": "Sorry I didn't understand what you said.",
+    "not-heard": "Sorry I didn't heard what you said.",
+    "resource-not-found": "Sorry, I can't found the information you asked."
 }
 }

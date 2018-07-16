@@ -26,7 +26,9 @@ def get_weather(latitude, longitude, time, language):
 def get_crypto(crypto):
     res = requests.get(url=services_url+'/api/crypto/'+crypto, headers=headers)
     if res.status_code == 200:
-        return res.json()
+        return res.json(), True
+    elif res.status_code == 404:
+        return res.json(), False
     else:
         raise ExternalAPIException(api_name='API Services - Cryptonews', description='HTTP code: {}\nDetails: {}'.format(res.status_code, res.content))
 
