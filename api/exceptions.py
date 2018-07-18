@@ -62,7 +62,7 @@ class InvalidCredentialsException(APIException):
 
 
 class OperationFailedException(APIException):
-    status_code = 500
+    status_code = 422
 
     def __init__(self):
         super().__init__(

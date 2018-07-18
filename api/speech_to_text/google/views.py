@@ -14,7 +14,6 @@ logger = logging.getLogger(__name__)
 @stt_google.route('/recognize', methods=['POST'])
 def recognize():
     errors = []
-
     if 'audio' not in request.files:
         errors.append(dict(MissingParameterException('audio')))
     if 'language' not in request.form:
@@ -25,10 +24,8 @@ def recognize():
 
     file = request.files['audio']
     language = request.form['language']
-
     if language not in LANGUAGES_CODE:
         return jsonify({'errors': [dict(BadParameterException('language', valid_values=LANGUAGES_CODE))]}), 400
-
     try:
         file_content = file.read()
     except Exception:
@@ -37,9 +34,8 @@ def recognize():
     try:
         res = google_speech_send_request(file_content, language)
     except OperationFailedException as e:
-        return jsonify({'errors': [dict(e)]}), 500
+        return jsonify({'errors': [dict(e)]}), e.status_code
     except Exception as e:
         logger.error(e)
         return jsonify({'errors': [dict(ExternalAPIException('Google'))]}), 503
-
     return jsonify(res), 200

@@ -35,9 +35,9 @@ def answer():
             res = recast_send_request_dialog(text, request.json.get('user_id'))
             return jsonify(res['results']), 200
         except InvalidCredentialsException as e:
-            return jsonify({'errors': [dict(e)]}), 401
+            return jsonify({'errors': [dict(e)]}), e.status_code
         except ExternalAPIException as e:
-            return jsonify({'errors': [dict(e)]}), 503
+            return jsonify({'errors': [dict(e)]}), e.status_code
         except Exception as e:
             logger.error(e)
             return jsonify({'errors': [dict(APIException('converse_parse_nlp'))]}), 500
@@ -67,9 +67,9 @@ def intent():
             res = recast_send_request_intent(text, language)
             return jsonify(res['results']), 200
         except InvalidCredentialsException as e:
-            return jsonify({'errors': [dict(e)]}), 401
+            return jsonify({'errors': [dict(e)]}), e.status_code
         except ExternalAPIException as e:
-            return jsonify({'errors': [dict(e)]}), 503
+            return jsonify({'errors': [dict(e)]}), e.status_code
         except Exception as e:
             logger.error(e)
             return jsonify({'errors': [dict(APIException('converse_parse_nlp'))]}), 500
@@ -101,11 +101,11 @@ def memory():
             res = recast_send_request_memory(field, user_id, value)
             return jsonify(res['results']), 200
         except ResourceNotFoundException as e:
-            return jsonify({'errors': [dict(e)]}), 404
+            return jsonify({'errors': [dict(e)]}), e.status_code
         except InvalidCredentialsException as e:
-            return jsonify({'errors': [dict(e)]}), 401
+            return jsonify({'errors': [dict(e)]}), e.status_code
         except ExternalAPIException as e:
-            return jsonify({'errors': [dict(e)]}), 503
+            return jsonify({'errors': [dict(e)]}), e.status_code
         except Exception as e:
             logger.error(e)
             return jsonify({'errors': [dict(APIException('nlp_memory({}:{})'.format(type(e).__name__, e)))]}), 500
