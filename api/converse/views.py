@@ -62,6 +62,7 @@ def conversation(want):
     # Case: input is text
     elif wanting_type == 'text':
         user_id = request.json.get('user_id')
+        print(user_id)
         text = request.json['text']
         language = request.json['language']
 

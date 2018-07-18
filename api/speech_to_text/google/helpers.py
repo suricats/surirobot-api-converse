@@ -13,10 +13,9 @@ def google_speech_send_request(content, language):
         encoding=enums.RecognitionConfig.AudioEncoding.LINEAR16,
         language_code=language
     )
-
-    response = speech_client.recognize(config, audio)
-
     try:
+        response = speech_client.recognize(config, audio)
+
         return {
             'text': response.results[0].alternatives[0].transcript,
             'confidence': round(float(response.results[0].alternatives[0].confidence), 4)
