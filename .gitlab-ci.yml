@@ -63,3 +63,8 @@ mirror_to_github:
     - git remote add github $GITHUB_DEPLOY_URL
     - git fetch github
     - git push github HEAD:master --force
+  only:
+    - master
+  except:
+    - schedules
+
