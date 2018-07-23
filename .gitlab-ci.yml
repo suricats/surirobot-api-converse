@@ -2,6 +2,7 @@ image: python:3.6
 stages:
   - test
   - build
+  - release
 
 variables:
   PIP_CACHE_DIR: "$CI_PROJECT_DIR/.cache"
@@ -49,3 +50,21 @@ build_docker_image:
     - master
   tags:
     - docker
+
+mirror_to_github:
+  stage: release
+  script:
+    - 'which ssh-agent || ( apt-get update -y && apt-get install openssh-client -y )'
+    - mkdir -p ~/.ssh
+    - eval $(ssh-agent -s)
+    - ssh-add <(echo "$GITHUB_DEPLOY_KEY")
+    - ssh-keyscan -H github.com > ~/.ssh/known_hosts
+    - git remote rm github || true
+    - git remote add github $GITHUB_DEPLOY_URL
+    - git fetch github
+    - git push github HEAD:master --force
+  only:
+    - master
+  except:
+    - schedules
+

@@ -93,6 +93,7 @@ def conversation(want):
             return jsonify({'errors': [dict(api_e)]}), api_e.status_code
         # Check special intents
         try:
+            print(res_nlp)
             spec_message = check_special_intent(intent, res_nlp['results'], SIMPLIFIED_LANGUAGES_CODE[language])
             if spec_message:
                 message = spec_message
@@ -134,6 +135,8 @@ def check_special_intent(intent, nlp, language):
         if location:
             latitude = location['lat']
             longitude = location['lng']
+            if not latitude and not longitude:
+                return CUSTOM_MESSAGES[language]['no-weather']
             if nlp['nlp']['entities'].get('datetime'):
                 time = dp.parse(nlp['entities']['datetime'][0]['iso']).strftime('%s')
             else:
