@@ -1,8 +1,8 @@
 image: python:3.6
 stages:
   - test
+  - github
   - build
-  - release
 
 variables:
   PIP_CACHE_DIR: "$CI_PROJECT_DIR/.cache"
@@ -52,7 +52,7 @@ build_docker_image:
     - docker
 
 mirror_to_github:
-  stage: release
+  stage: github
   script:
     - 'which ssh-agent || ( apt-get update -y && apt-get install openssh-client -y )'
     - mkdir -p ~/.ssh
