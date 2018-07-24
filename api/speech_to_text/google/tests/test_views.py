@@ -1,6 +1,6 @@
 import io
 import json
-from mock import patch
+from mock import patch, Mock, MagicMock
 from flask import url_for
 
 from api.exceptions import BadParameterException, MissingParameterException
@@ -95,3 +95,28 @@ def test_recognize_missing_audio_file_and_language(mock_google_speech_send_reque
     assert res.status_code == 400
     assert sorted(json.loads(res.data).items()) == sorted(expected_result.items())
     assert mock_google_speech_send_request.call_count == 0
+
+
+# @patch('api.speech_to_text.google.views.google_speech_send_request', autospec=True)
+# def test_recognize_bad_audio_file(mock_google_speech_send_request, google_request, client):
+#     mock_file = Mock()
+#     mock_file.read = MagicMock(side_effect=Exception())
+#     res = client.post(
+#         url_for('stt_google.recognize'),
+#         content_type='multipart/form-data',
+#         data={
+#             'language': google_request['language'],
+#             'audio': (mock_file, 'audio.wav')
+#         }
+#     )
+#
+#     expected_result = {
+#         'errors': [
+#             dict(BadParameterException('audio'))
+#         ]
+#     }
+#
+#     assert res.status_code == 400
+#     print(sorted(json.loads(res.data).items()))
+#     assert sorted(json.loads(res.data).items()) == sorted(expected_result.items())
+#     assert mock_google_speech_send_request.call_count == 0
