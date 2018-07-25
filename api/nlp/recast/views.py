@@ -1,13 +1,11 @@
 import logging
-import json
-from flask import Blueprint, request, jsonify, Response
+
+from flask import Blueprint, request, jsonify
 
 from api.exceptions import MissingParameterException, InvalidCredentialsException, \
-    BadParameterException, ExternalAPIException, APIException, MissingHeaderException, BadHeaderException, OperationFailedException, ResourceNotFoundException
-
-from api.nlp.recast.helpers import recast_send_request_dialog, recast_send_request_intent, recast_send_request_memory
+    BadParameterException, ExternalAPIException, APIException, ResourceNotFoundException
 from api.nlp.recast.constants import LANGUAGES_CODE, SUPPORTED_FIELDS
-
+from api.nlp.recast.helpers import recast_send_request_dialog, recast_send_request_intent, recast_send_request_memory
 
 nlp_recast = Blueprint('nlp_recast', __name__)
 logger = logging.getLogger(__name__)

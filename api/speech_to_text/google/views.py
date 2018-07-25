@@ -23,19 +23,15 @@ def recognize():
         return jsonify({'errors': errors}), 400
 
     file = request.files['audio']
+    file_content = file.read()
     language = request.form['language']
     if language not in LANGUAGES_CODE:
         return jsonify({'errors': [dict(BadParameterException('language', valid_values=LANGUAGES_CODE))]}), 400
-    try:
-        file_content = file.read()
-    except Exception:
-        return jsonify({'errors': [dict(BadParameterException('audio'))]}), 400
 
     try:
         res = google_speech_send_request(file_content, language)
-    except OperationFailedException as e:
-        return jsonify({'errors': [dict(e)]}), e.status_code
-    except Exception as e:
+    except (OperationFailedException, BadParameterException) as e:
         logger.error(e)
-        return jsonify({'errors': [dict(ExternalAPIException('Google'))]}), 503
+        return jsonify({'errors': [dict(e)]}), e.status_code
+
     return jsonify(res), 200
