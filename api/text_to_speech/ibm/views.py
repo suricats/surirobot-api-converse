@@ -31,12 +31,11 @@ def speak():
 
     try:
         res = ibm_send_request(text, language)
-    except InvalidCredentialsException as e:
-        return jsonify({'errors': [dict(e)]}), 401
-    except ExternalAPIException as e:
-        return jsonify({'errors': [dict(e)]}), 503
+    except (InvalidCredentialsException, ExternalAPIException) as e:
+        return jsonify({'errors': [dict(e)]}), e.status_code
     except Exception as e:
         logger.error(e)
-        return jsonify({'errors': [dict(APIException())]}), 500
+        api_e = APIException()
+        return jsonify({'errors': [dict(api_e)]}), api_e.status_code
 
     return Response(res, mimetype="audio/wav", status=200)

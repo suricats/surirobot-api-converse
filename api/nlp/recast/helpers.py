@@ -12,12 +12,12 @@ token = RECAST_CREDENTIALS['token']
 headers = {'Authorization': 'Token ' + token, 'Content-Type': 'application/json'}
 
 
-def recast_send_request_dialog(text, id=None, language=None):
+def recast_send_request_dialog(text, conversation_id=None, language=None):
     if not token:
         raise InvalidCredentialsException('recast')
-    if id is None:
-        id = DEFAULT_ID
-    data = {'message': {'content': text, 'type': "text"}, 'conversation_id': id}
+    if conversation_id is None:
+        conversation_id = DEFAULT_ID
+    data = {'message': {'content': text, 'type': "text"}, 'conversation_id': conversation_id}
     if language:
         data['language'] = language
     data = json.dumps(data)

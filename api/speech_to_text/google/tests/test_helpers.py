@@ -23,7 +23,6 @@ def test_google_speech_client_failed(mock_speech_client, google_request, google_
         google_speech_send_request(google_request['file'], google_request['language'])
 
 
-
 @pytest.mark.externalapi
 def test_service_available(google_request, result):
     res = google_speech_send_request(google_request['file'], google_request['language'])

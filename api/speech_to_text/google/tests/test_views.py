@@ -9,6 +9,7 @@ from api.exceptions import BadParameterException, MissingParameterException, Ope
 from api.speech_to_text.google.constants import LANGUAGES_CODE
 from api.speech_to_text.google.helpers import SpeechClient
 
+
 # Ensure that STT behaves correctly when provided correct information
 @patch('api.speech_to_text.google.views.google_speech_send_request', autospec=True)
 def test_recognize_success(mock_google_speech_send_request, client, google_request, result):
@@ -129,14 +130,14 @@ def test_recognize_ibm_not_working(mock_google_speech_send_request, google_reque
 
 # Ensure that STT behaves correctly when audio file is incorrect
 @patch.object(SpeechClient, 'recognize', autospec=True)
-def test_recognize_audio_corrupted(mock_recognize, google_request, client):
+def test_recognize_audio_corrupted(mock_recognize, google_request, client, corrupted_audio):
     mock_recognize.side_effect = RetryError('mock')
     res = client.post(
         url_for('stt_google.recognize'),
         content_type='multipart/form-data',
         data={
             'language': google_request['language'],
-            'audio': (io.BytesIO(google_request['file']), 'audio.wav')
+            'audio': (io.BytesIO(corrupted_audio), 'audio.wav')
         }
     )
     expected_result = {
