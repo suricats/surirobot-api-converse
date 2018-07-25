@@ -16,6 +16,13 @@ def google_request():
 
 
 @pytest.fixture()
+def corrupted_audio():
+    file = os.getcwd() + '/api/speech_to_text/tests/fixtures/corrupted.wav'
+    with io.open(file, 'rb') as audio:
+        return audio.read()
+
+
+@pytest.fixture()
 def result():
     return {
         'text': 'Bonjour comment tu vas',

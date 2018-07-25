@@ -62,7 +62,7 @@ class InvalidCredentialsException(APIException):
 
 
 class OperationFailedException(APIException):
-    status_code = 422
+    status_code = 503
 
     def __init__(self):
         super().__init__(
@@ -88,6 +88,8 @@ class ResourceNotFoundException(APIException):
 
 
 class BadParameterException(APIException):
+    status_code = 422
+
     def __init__(self, parameter, valid_values=None):
         msg = '{} is not correct.'.format(parameter)
         if valid_values:
