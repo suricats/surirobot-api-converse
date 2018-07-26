@@ -1,7 +1,7 @@
 # API Converse
 
-[![pipeline status](https://gitlab.kozlek.net/surirobot/api-converse/badges/master/pipeline.svg)](https://gitlab.kozlek.net/surirobot/api-converse/pipelines)
-[![coverage report](https://gitlab.kozlek.net/surirobot/api-converse/badges/master/coverage.svg)](https://gitlab.kozlek.net/surirobot/api-converse/commits/dev)
+[![Build Status](https://travis-ci.org/suricats/surirobot-api-converse.svg?branch=master)](https://travis-ci.org/suricats/surirobot-api-converse)
+[![coverage report](https://codecov.io/gh/suricats/suriroboot-api-converse/branch/master/graph/badge.svg)](https://codecov.io/gh/suricats/surirobot-api-converse)
 [![PyPI - Python Version](https://img.shields.io/badge/python-3.6-blue.svg)](https://docs.python.org/3/whatsnew/3.6.html)
 
 This API provides all the necessary endpoints to give the `converse` capability to Surirobot. 

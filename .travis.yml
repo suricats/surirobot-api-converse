@@ -7,3 +7,6 @@ script:
   - tools/get-credentials
   - pytest --cov=api
 cache: pip
+
+after_success:
+  - codecov
