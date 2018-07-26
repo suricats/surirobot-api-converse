@@ -1,7 +1,7 @@
 import pytest
 import json
 from mock import patch, MagicMock, Mock
-from api.exceptions import OperationFailedException
+from api.exceptions import OperationFailedException, InvalidCredentialsException, ExternalAPIException
 from api.nlp.recast.helpers import requests, recast_send_request_dialog, recast_send_request_intent, recast_send_request_memory
 from api.nlp.recast.constants import DEFAULT_ID
 
@@ -33,3 +33,21 @@ def test_recast_id_and_language_missing(mock_post, recast_request):
     assert res == DEFAULT_ID
 
 
+# Ensure that NLP behaves correctly when credentials are wrong/missing
+@patch.object(requests, 'post', autospec=True)
+def test_recast_invalid_credentials(mock_post, recast_request):
+    mock_post.return_value = Mock(status_code=401)
+    with pytest.raises(InvalidCredentialsException):
+        recast_send_request_dialog(recast_request['text'], recast_request['conversation_id'],
+                                         recast_request['language'])
+    assert mock_post.call_count == 1
+
+
+# Ensure that NLP behaves correctly when Recast is offline
+@patch.object(requests, 'post', autospec=True)
+def test_recast_recast_offline(mock_post, recast_request):
+    mock_post.return_value = Mock(status_code=500)
+    with pytest.raises(ExternalAPIException):
+        recast_send_request_dialog(recast_request['text'], recast_request['conversation_id'],
+                                         recast_request['language'])
+    assert mock_post.call_count == 1

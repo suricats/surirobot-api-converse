@@ -13,8 +13,6 @@ headers = {'Authorization': 'Token ' + token, 'Content-Type': 'application/json'
 
 
 def recast_send_request_dialog(text, conversation_id=None, language=None):
-    if not token:
-        raise InvalidCredentialsException('recast')
     if conversation_id is None:
         conversation_id = DEFAULT_ID
     data = {'message': {'content': text, 'type': "text"}, 'conversation_id': conversation_id}
