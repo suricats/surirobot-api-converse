@@ -148,3 +148,4 @@ def test_recognize_audio_corrupted(mock_recognize, google_request, client, corru
     assert res.status_code == 422
     assert sorted(json.loads(res.data).items()) == sorted(expected_result.items())
     assert mock_recognize.call_count == 1
+

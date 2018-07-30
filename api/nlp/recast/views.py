@@ -14,19 +14,23 @@ logger = logging.getLogger(__name__)
 @nlp_recast.route('/answer', methods=['POST'])
 def answer():
     errors = []
-
+    print('A')
+    print(request.data)
     if request.json:
+        print('B')
         if 'text' not in request.json:
             errors.append(dict(MissingParameterException('text')))
 
         if 'language' not in request.json:
             errors.append(dict(MissingParameterException('language')))
-
+        print('C')
         if errors:
             return jsonify({'errors': errors}), 400
-
+        print('D')
         text = request.json['text']
         language = request.json['language']
+        print('F')
+        print('languagef : {}'.format(language))
         if language not in LANGUAGES_CODE:
             return jsonify({'errors': [dict(BadParameterException('language', valid_values=LANGUAGES_CODE))]}), 400
         try:
