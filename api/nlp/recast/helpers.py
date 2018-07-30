@@ -13,8 +13,6 @@ headers = {'Authorization': 'Token ' + token, 'Content-Type': 'application/json'
 
 
 def recast_send_request_dialog(text, conversation_id=None, language=None):
-    if not token:
-        raise InvalidCredentialsException('recast')
     if conversation_id is None:
         conversation_id = DEFAULT_ID
     data = {'message': {'content': text, 'type': "text"}, 'conversation_id': conversation_id}
@@ -31,8 +29,6 @@ def recast_send_request_dialog(text, conversation_id=None, language=None):
 
 
 def recast_send_request_intent(text, language=None):
-    if not token:
-        raise InvalidCredentialsException('recast')
     data = {'text': text}
     if language:
         data['language'] = language
@@ -47,8 +43,6 @@ def recast_send_request_intent(text, language=None):
 
 
 def recast_send_request_memory(field, user_id, value=None):
-    if not token:
-        raise InvalidCredentialsException('recast')
     url = 'https://api.recast.ai/build/v1/users/' + RECAST_CREDENTIALS['user_slug'] + '/bots/' + RECAST_CREDENTIALS['bot_slug'] + '/builders/v1/conversation_states/' + user_id
     res = requests.get(url=url, headers=headers)
     if res.status_code == 404:
@@ -61,7 +55,7 @@ def recast_send_request_memory(field, user_id, value=None):
         if value is None and memory.get(field) is not None:
             del memory[field]
         # Case: replacing username
-        if field == 'username':
+        elif field == 'username':
             memory['username'] = {
                 "fullname": value,
                 "raw": value,
@@ -73,7 +67,7 @@ def recast_send_request_memory(field, user_id, value=None):
         res1 = requests.put(url=url, data=data, headers=headers)
         if res1.status_code == 200:
             return res1.json()
-        elif res.status_code == 401:
+        elif res1.status_code == 401:
             raise InvalidCredentialsException(api_name='Recast')
         else:
             raise ExternalAPIException(api_name='Recast', description='memory_update({})'.format(res1.status_code))

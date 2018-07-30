@@ -14,17 +14,14 @@ logger = logging.getLogger(__name__)
 @nlp_recast.route('/answer', methods=['POST'])
 def answer():
     errors = []
-
     if request.json:
         if 'text' not in request.json:
             errors.append(dict(MissingParameterException('text')))
 
         if 'language' not in request.json:
             errors.append(dict(MissingParameterException('language')))
-
         if errors:
             return jsonify({'errors': errors}), 400
-
         text = request.json['text']
         language = request.json['language']
         if language not in LANGUAGES_CODE:
@@ -38,7 +35,7 @@ def answer():
             return jsonify({'errors': [dict(e)]}), e.status_code
         except Exception as e:
             logger.error(e)
-            return jsonify({'errors': [dict(APIException('converse_parse_nlp'))]}), 500
+            return jsonify({'errors': [dict(APIException('nlp_answer'))]}), 500
 
     else:
         errors.append(dict(APIException('no_content')))
@@ -70,7 +67,7 @@ def intent():
             return jsonify({'errors': [dict(e)]}), e.status_code
         except Exception as e:
             logger.error(e)
-            return jsonify({'errors': [dict(APIException('converse_parse_nlp'))]}), 500
+            return jsonify({'errors': [dict(APIException('nlp_intent'))]}), 500
 
     else:
         errors.append(dict(APIException('no_content')))
@@ -98,15 +95,13 @@ def memory():
         try:
             res = recast_send_request_memory(field, user_id, value)
             return jsonify(res['results']), 200
-        except ResourceNotFoundException as e:
-            return jsonify({'errors': [dict(e)]}), e.status_code
         except InvalidCredentialsException as e:
             return jsonify({'errors': [dict(e)]}), e.status_code
         except ExternalAPIException as e:
             return jsonify({'errors': [dict(e)]}), e.status_code
         except Exception as e:
             logger.error(e)
-            return jsonify({'errors': [dict(APIException('nlp_memory({}:{})'.format(type(e).__name__, e)))]}), 500
+            return jsonify({'errors': [dict(APIException('nlp_memory'.format(type(e).__name__, e)))]}), 500
 
     else:
         errors.append(dict(APIException('no_content')))
