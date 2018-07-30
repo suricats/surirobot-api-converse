@@ -10,18 +10,21 @@ def recast_intent_request():
 @pytest.fixture()
 def recast_intent_response():
     return {
-        "act": "assert",
-        "entities": {},
-        "intents": [
-            {
-                "confidence": 0.99,
-                "description": "Says hello",
-                "slug": "greetings"
-            }
-        ],
-        "language": "fr",
-        "sentiment": "vpositive",
-        "source": "Bonjour",
+        "results" : {
+            "act": "assert",
+            "entities": {},
+            "intents": [
+                {
+                    "confidence": 0.99,
+                    "description": "Says hello",
+                    "slug": "greetings"
+                }
+            ],
+            "language": "fr",
+            "sentiment": "vpositive",
+            "source": "Bonjour",
+        }
+
     }
 
 
