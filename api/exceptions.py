@@ -72,6 +72,8 @@ class OperationFailedException(APIException):
 
 
 class MissingParameterException(APIException):
+    status_code = 400
+
     def __init__(self, parameter):
         super().__init__(
             'missing_parameter',

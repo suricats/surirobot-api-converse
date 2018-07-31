@@ -1,10 +1,9 @@
-import os
-import requests
 import json
+import os
 
-from api.exceptions import APIException, ExternalAPIException, InvalidCredentialsException, OperationFailedException, ResourceNotFoundException
-with open(os.getcwd() + '/res/credentials/recast.json', 'r') as file:
-    RECAST_CREDENTIALS = json.load(file)
+import requests
+
+from api.exceptions import APIException, ExternalAPIException
 
 services_url = os.environ.get('SERVICES_URL')
 if services_url is None:

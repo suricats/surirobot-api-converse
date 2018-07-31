@@ -204,8 +204,6 @@ def test_intent_success(mock_recast_send_request_intent, client, recast_intent_r
             'language': recast_intent_request['language']
         })
     )
-    print(res)
-    print(res.data)
     assert mock_recast_send_request_intent.call_count == 1
     assert res.status_code == 200
 
@@ -281,7 +279,6 @@ def test_intent_recast_not_working(mock_recast_send_request_intent, client, reca
             dict(ExternalAPIException())
         ]
     }
-    print(res.data)
     assert mock_recast_send_request_intent.call_count == 1
     assert res.status_code == 503
     assert sorted(json.loads(res.data).items()) == sorted(expected_result.items())
