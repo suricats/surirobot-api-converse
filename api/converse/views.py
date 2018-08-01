@@ -78,14 +78,15 @@ def conversation(want):
         try:
             res_nlp = nlp.recast_send_request_dialog(text, user_id, SIMPLIFIED_LANGUAGES_CODE[language])
             output['nlp'] = res_nlp
+            print(res_nlp)
             if not res_nlp['results']['nlp']['intents']:
                 intent = DEFAULT_INTENT
             else:
                 intent = res_nlp['results']['nlp']['intents'][0]['slug']
             if not res_nlp['results']['messages']:
-                message = ""
-            else:
                 message = CUSTOM_MESSAGES[SIMPLIFIED_LANGUAGES_CODE[language]]["not-understand"]
+            else:
+                message = res_nlp['results']['messages'][0]['content']
 
         except (InvalidCredentialsException, ExternalAPIException) as e:
             return jsonify({'errors': [dict(e)]}), e.status_code
