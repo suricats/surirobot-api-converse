@@ -147,13 +147,12 @@ def check_special_intent(intent, res_nlp, language):
             current_tz = tz.gettz(tf.timezone_at(lng=longitude, lat=latitude))
             local_time = datetime.fromtimestamp(time).replace(tzinfo=current_tz)
             if language == 'fr':
-                message = 'La météo pour {} le {}: {} avec une temperature de {} °C et une probabilité de précipitation de {}%'.format(
-                    location['formatted'], local_time.strftime("%d/%m/%Y à %Hh%M"),
-                    res['summary'], res['temperature'], res['precipProbability'])
+                message = 'La météo pour {} le {}: {} avec une temperature de {} °C et une probabilité de précipitation de {}%'
             else:
-                message = 'The weather for {} at {}: {} with a temperature of {} °C with a probability of raining of {}%'.format(
+                message = 'The weather for {} at {}: {} with a temperature of {} °C with a probability of raining of {}%'
+            message = message.format(
                     location['formatted'], local_time.strftime("%d/%m/%Y à %Hh%M"),
-                    res['summary'], res['temperature'], res['precipProbability']    )
+                    res['currently']['summary'], res['currently']['temperature'], res['currently']['precipProbability'])
     if intent == "cryptonews":
         if res_nlp['nlp']['entities'].get('cryptomonnaie'):
             crypto = res_nlp['nlp']['entities']['cryptomonnaie'][0]['value']
@@ -163,10 +162,10 @@ def check_special_intent(intent, res_nlp, language):
                 message = CUSTOM_MESSAGES[language]['resource-not-found']
             else:
                 if language == 'fr':
-                    message = 'La cryptomonnaie {0} vaut actuellement {1:.2f} € et a évolué de {2:.2f} % depuis les dernières 24h.'.format(
-                        crypto, res['value'], res['evolution'])
+                    message = 'La cryptomonnaie {0} vaut actuellement {1:.2f} € et a évolué de {2:.2f} % depuis les dernières 24h.'
                 else:
-                    message = 'The cryptocurrency {0} is actually at {1:.2f} € and changed of {2:.2f} % during the last 24 hours.'.format(
+                    message = 'The cryptocurrency {0} is actually at {1:.2f} € and changed of {2:.2f} % during the last 24 hours.'
+                message = message.format(
                         crypto, res['value'], res['evolution'])
     if intent == "news":
         res = get_news()
