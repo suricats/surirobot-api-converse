@@ -20,7 +20,8 @@ def google_speech_send_request(content, language):
             'text': response.results[0].alternatives[0].transcript,
             'confidence': round(float(response.results[0].alternatives[0].confidence), 4)
         }
-    except RetryError:
-        raise BadParameterException('audio', ['WAV', '16 bits', 'Mono', '44100Hz'])
+    except RetryError as e:
+        print('{} : {}'.format(type(e).__name__, e))
+        raise BadParameterException('audio', ['WAV', '16 bits', 'Mono', '44100Hz', '<1min'])
     except Exception as e:
         raise OperationFailedException from e
