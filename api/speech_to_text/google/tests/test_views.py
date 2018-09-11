@@ -142,7 +142,7 @@ def test_recognize_audio_corrupted(mock_recognize, google_request, client, corru
     )
     expected_result = {
         'errors': [
-            dict(BadParameterException('audio', ['WAV', '16 bits', 'Mono', '44100Hz']))
+            dict(BadParameterException('audio', ['WAV', '16 bits', 'Mono', '44100Hz', '<1min']))
         ]
     }
     assert res.status_code == 422
