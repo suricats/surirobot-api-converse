@@ -42,11 +42,16 @@ pip install -r requirements-dev.txt
 ```
 
 
+## Configure the environment file
 * Configure .env
 ```shell
 cp .env.example .env
 ```
+If you want to use the default environment
+- Fill only the ```REMOTE_DATA_LOGIN```  and ```REMOTE_DATA_PASSWD``` fields
+- Run the command : ```tools/get-env```
 
+## Configure credentials
 * Option 1 - Drop your Google API credentials in res/credentials folder
   * ibm.json - IBM Watson
   * google.json - Google Cloud Speech
