@@ -1,0 +1,764 @@
+{
+	"info": {
+		"_postman_id": "b9c7e050-04a1-45bf-812b-26513331ae1b",
+		"name": "HAL-1 API Converse",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "NLP - answer",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					},
+					{
+						"key": "Accept",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"text\": \"Quel est la meteo pour Paris pour demain ?\",\n  \"language\": \"fr\",\n  \"user_id\": \"AZER\"\n}"
+				},
+				"url": {
+					"raw": "{{converse_url}}/api/nlp/answer",
+					"host": [
+						"{{converse_url}}"
+					],
+					"path": [
+						"api",
+						"nlp",
+						"answer"
+					]
+				}
+			},
+			"response": [
+				{
+					"name": "ask weather",
+					"originalRequest": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"disabled": false
+							},
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"disabled": false
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"text\": \"Quel est la meteo pour Paris pour demain ?\",\n  \"language\": \"fr\",\n  \"user_id\": \"AZER\"\n}"
+						},
+						"url": {
+							"raw": "{{converse_url}}/api/nlp/answer",
+							"host": [
+								"{{converse_url}}"
+							],
+							"path": [
+								"api",
+								"nlp",
+								"answer"
+							]
+						}
+					},
+					"status": "OK",
+					"code": 200,
+					"_postman_previewlanguage": "json",
+					"header": [
+						{
+							"key": "Connection",
+							"value": "keep-alive",
+							"name": "Connection",
+							"description": "Options that are desired for the connection"
+						},
+						{
+							"key": "Content-Length",
+							"value": "1308",
+							"name": "Content-Length",
+							"description": "The length of the response body in octets (8-bit bytes)"
+						},
+						{
+							"key": "Content-Type",
+							"value": "application/json",
+							"name": "Content-Type",
+							"description": "The mime type of this content"
+						},
+						{
+							"key": "Date",
+							"value": "Tue, 11 Sep 2018 13:36:01 GMT",
+							"name": "Date",
+							"description": "The date and time that the message was sent"
+						},
+						{
+							"key": "Server",
+							"value": "nginx/1.14.0",
+							"name": "Server",
+							"description": "A name for the server"
+						}
+					],
+					"cookie": [],
+					"body": "{\"conversation\":{\"id\":\"AZER\",\"language\":\"fr\",\"memory\":{\"crypto\":{\"confidence\":0.93,\"raw\":\"ethereum\",\"value\":\"ethereum\"},\"username\":{\"confidence\":0.99,\"fullname\":\"Jean-Mi\",\"raw\":\"Jean-Mi\"},\"weather-location\":{\"confidence\":0.99,\"country\":\"fr\",\"formatted\":\"Paris, France\",\"lat\":48.856614,\"lng\":2.3522219,\"place\":\"ChIJD7fiBh9u5kcRYJSMaMOCCwQ\",\"raw\":\"Paris\",\"type\":\"locality\"}},\"skill\":\"weather\",\"skill_occurences\":10},\"messages\":[{\"content\":\"Il semblerait que je sois incapable de donner la m\\u00e9t\\u00e9o pour le moment.\",\"type\":\"text\"}],\"nlp\":{\"act\":\"wh-query\",\"entities\":{\"datetime\":[{\"accuracy\":\"day\",\"chronology\":\"future\",\"confidence\":0.99,\"formatted\":\"mercredi 12 septembre 2018 \\u00e0 13h36m01s (+0000)\",\"iso\":\"2018-09-12T13:36:01+00:00\",\"raw\":\"demain\",\"state\":\"relative\"}],\"location\":[{\"confidence\":0.99,\"country\":\"fr\",\"formatted\":\"Paris, France\",\"lat\":48.856614,\"lng\":2.3522219,\"place\":\"ChIJD7fiBh9u5kcRYJSMaMOCCwQ\",\"raw\":\"Paris\",\"type\":\"locality\"}]},\"intents\":[{\"confidence\":0.99,\"description\":\"Get the weather\",\"slug\":\"get-weather\"}],\"language\":\"fr\",\"processing_language\":\"fr\",\"sentiment\":\"neutral\",\"source\":\"Quel est la meteo pour Paris pour demain ?\",\"status\":200,\"timestamp\":\"2018-09-11T13:36:01.809599+00:00\",\"type\":\"enty:event\",\"uuid\":\"69e66117-5ef4-46b3-990d-a871e7729d46\",\"version\":\"2.12.0\"}}\n"
+				}
+			]
+		},
+		{
+			"name": "NLP - intent",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					},
+					{
+						"key": "Accept",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\t\"text\": \"Bonjour\",\n\t\"language\": \"fr\"\n}"
+				},
+				"url": {
+					"raw": "{{converse_url}}/api/nlp/intent",
+					"host": [
+						"{{converse_url}}"
+					],
+					"path": [
+						"api",
+						"nlp",
+						"intent"
+					]
+				}
+			},
+			"response": [
+				{
+					"name": "hello",
+					"originalRequest": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"disabled": false
+							},
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"disabled": false
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"text\": \"Bonjour\",\n\t\"language\": \"fr\"\n}"
+						},
+						"url": {
+							"raw": "{{converse_url}}/api/nlp/intent",
+							"host": [
+								"{{converse_url}}"
+							],
+							"path": [
+								"api",
+								"nlp",
+								"intent"
+							]
+						}
+					},
+					"status": "OK",
+					"code": 200,
+					"_postman_previewlanguage": "json",
+					"header": [
+						{
+							"key": "Connection",
+							"value": "keep-alive",
+							"name": "Connection",
+							"description": "Options that are desired for the connection"
+						},
+						{
+							"key": "Content-Length",
+							"value": "332",
+							"name": "Content-Length",
+							"description": "The length of the response body in octets (8-bit bytes)"
+						},
+						{
+							"key": "Content-Type",
+							"value": "application/json",
+							"name": "Content-Type",
+							"description": "The mime type of this content"
+						},
+						{
+							"key": "Date",
+							"value": "Tue, 11 Sep 2018 12:56:51 GMT",
+							"name": "Date",
+							"description": "The date and time that the message was sent"
+						},
+						{
+							"key": "Server",
+							"value": "nginx/1.14.0",
+							"name": "Server",
+							"description": "A name for the server"
+						}
+					],
+					"cookie": [],
+					"body": "{\"act\":\"assert\",\"entities\":{},\"intents\":[{\"confidence\":0.99,\"description\":\"Says hello\",\"slug\":\"greetings\"}],\"language\":\"fr\",\"processing_language\":\"fr\",\"sentiment\":\"vpositive\",\"source\":\"Bonjour\",\"status\":200,\"timestamp\":\"2018-09-11T12:56:51.260806+00:00\",\"type\":null,\"uuid\":\"aaba29c2-f6a4-4ee4-98eb-750d5870ed43\",\"version\":\"2.12.0\"}\n"
+				}
+			]
+		},
+		{
+			"name": "NLP - memory",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Token bff8ac223d8ffc4e87bc944078270082"
+					},
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"field\": \"username\",\n  \"user_id\": \"SURI42\",\n  \"value\": \"Alain BERRIER\"\n}"
+				},
+				"url": {
+					"raw": "{{converse_url}}/api/nlp/memory",
+					"host": [
+						"{{converse_url}}"
+					],
+					"path": [
+						"api",
+						"nlp",
+						"memory"
+					]
+				}
+			},
+			"response": [
+				{
+					"name": "username",
+					"originalRequest": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Token bff8ac223d8ffc4e87bc944078270082",
+								"disabled": false
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"disabled": false
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"field\": \"username\",\n  \"user_id\": \"SURI42\",\n  \"value\": \"Alain BERRIER\"\n}"
+						},
+						"url": {
+							"raw": "{{converse_url}}/api/nlp/memory",
+							"host": [
+								"{{converse_url}}"
+							],
+							"path": [
+								"api",
+								"nlp",
+								"memory"
+							]
+						}
+					},
+					"status": "OK",
+					"code": 200,
+					"_postman_previewlanguage": "json",
+					"header": [
+						{
+							"key": "Connection",
+							"value": "keep-alive",
+							"name": "Connection",
+							"description": "Options that are desired for the connection"
+						},
+						{
+							"key": "Content-Length",
+							"value": "262",
+							"name": "Content-Length",
+							"description": "The length of the response body in octets (8-bit bytes)"
+						},
+						{
+							"key": "Content-Type",
+							"value": "application/json",
+							"name": "Content-Type",
+							"description": "The mime type of this content"
+						},
+						{
+							"key": "Date",
+							"value": "Tue, 11 Sep 2018 12:57:36 GMT",
+							"name": "Date",
+							"description": "The date and time that the message was sent"
+						},
+						{
+							"key": "Server",
+							"value": "nginx/1.14.0",
+							"name": "Server",
+							"description": "A name for the server"
+						}
+					],
+					"cookie": [],
+					"body": "{\"builder\":{\"slug\":\"v1\"},\"conversation_id\":\"SURI42\",\"id\":\"96a98743-30f8-47f9-9804-db762ea87f95\",\"language\":\"fr\",\"memory\":{\"username\":{\"confidence\":0.99,\"fullname\":\"Alain BERRIER\",\"raw\":\"Alain BERRIER\"}},\"skill\":\"introduce\",\"skill_occurences\":1,\"skill_stack\":[]}\n"
+				}
+			]
+		},
+		{
+			"name": "Converse - text/audio",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\t\"text\":\"Bonjour !\",\n\t\"language\": \"fr-FR\",\n\t\"user_id\": \"DEFAULT\"\n}"
+				},
+				"url": {
+					"raw": "{{converse_url}}/api/converse/audio",
+					"host": [
+						"{{converse_url}}"
+					],
+					"path": [
+						"api",
+						"converse",
+						"audio"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Converse - text/text",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"text\":\"Quel est la meteo pour Paris pour demain ?\",\n  \"language\": \"fr-FR\",\n  \"user_id\": \"DEFAULT\"\n}  "
+				},
+				"url": {
+					"raw": "{{converse_url}}/api/converse/text",
+					"host": [
+						"{{converse_url}}"
+					],
+					"path": [
+						"api",
+						"converse",
+						"text"
+					]
+				}
+			},
+			"response": [
+				{
+					"name": "ask weather",
+					"originalRequest": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"disabled": false
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"text\":\"Quel est la meteo pour Paris pour demain ?\",\n  \"language\": \"fr-FR\",\n  \"user_id\": \"DEFAULT\"\n}  "
+						},
+						"url": {
+							"raw": "{{converse_url}}/api/converse/text",
+							"host": [
+								"{{converse_url}}"
+							],
+							"path": [
+								"api",
+								"converse",
+								"text"
+							]
+						}
+					},
+					"status": "OK",
+					"code": 200,
+					"_postman_previewlanguage": "json",
+					"header": [
+						{
+							"key": "Connection",
+							"value": "keep-alive",
+							"name": "Connection",
+							"description": "Options that are desired for the connection"
+						},
+						{
+							"key": "Content-Length",
+							"value": "2091",
+							"name": "Content-Length",
+							"description": "The length of the response body in octets (8-bit bytes)"
+						},
+						{
+							"key": "Content-Type",
+							"value": "application/json",
+							"name": "Content-Type",
+							"description": "The mime type of this content"
+						},
+						{
+							"key": "Date",
+							"value": "Tue, 11 Sep 2018 12:59:45 GMT",
+							"name": "Date",
+							"description": "The date and time that the message was sent"
+						},
+						{
+							"key": "Server",
+							"value": "nginx/1.14.0",
+							"name": "Server",
+							"description": "A name for the server"
+						}
+					],
+					"cookie": [],
+					"body": "{\"input\":\"Quel est la meteo pour Paris pour demain ?\",\"intent\":\"get-weather\",\"message\":\"La m\\u00e9t\\u00e9o pour Paris, France le 12/09/2018 \\u00e0 12h59: D\\u00e9gag\\u00e9 avec une temperature de 27.27 \\u00b0C et une probabilit\\u00e9 de pr\\u00e9cipitation de 0%\",\"nlp\":{\"message\":\"Dialog rendered with success\",\"results\":{\"conversation\":{\"id\":\"DEFAULT\",\"language\":\"fr\",\"memory\":{\"appointment-date\":{\"accuracy\":\"month,day\",\"chronology\":\"future\",\"confidence\":0.99,\"formatted\":\"lundi 27 ao\\u00fbt 2018 \\u00e0 00h00m00s (+0000)\",\"iso\":\"2018-08-27T00:00:00+00:00\",\"raw\":\"le 27 ao\\u00fbt\",\"state\":\"absolute\"},\"appointment-person\":{\"confidence\":0.57,\"raw\":\"boulanger\"},\"crypto\":{\"confidence\":0.85,\"raw\":\"ethereum\",\"value\":\"ethereum\"},\"location\":{\"confidence\":0.99,\"country\":\"fr\",\"formatted\":\"Paris, France\",\"lat\":48.856614,\"lng\":2.3522219,\"place\":\"ChIJD7fiBh9u5kcRYJSMaMOCCwQ\",\"raw\":\"Paris\",\"type\":\"locality\"},\"username\":{\"confidence\":0.99,\"fullname\":\"Jean-Mi\",\"raw\":\"Jean-Mi\"},\"weather-location\":{\"confidence\":0.99,\"country\":\"fr\",\"formatted\":\"Paris, France\",\"lat\":48.856614,\"lng\":2.3522219,\"place\":\"ChIJD7fiBh9u5kcRYJSMaMOCCwQ\",\"raw\":\"Paris\",\"type\":\"locality\"}},\"skill\":\"weather\",\"skill_occurences\":1},\"messages\":[{\"content\":\"Il semblerait que je sois incapable de donner la m\\u00e9t\\u00e9o pour le moment.\",\"type\":\"text\"}],\"nlp\":{\"act\":\"wh-query\",\"entities\":{\"datetime\":[{\"accuracy\":\"day\",\"chronology\":\"future\",\"confidence\":0.99,\"formatted\":\"mercredi 12 septembre 2018 \\u00e0 12h59m45s (+0000)\",\"iso\":\"2018-09-12T12:59:45+00:00\",\"raw\":\"demain\",\"state\":\"relative\"}],\"location\":[{\"confidence\":0.99,\"country\":\"fr\",\"formatted\":\"Paris, France\",\"lat\":48.856614,\"lng\":2.3522219,\"place\":\"ChIJD7fiBh9u5kcRYJSMaMOCCwQ\",\"raw\":\"Paris\",\"type\":\"locality\"}]},\"intents\":[{\"confidence\":0.99,\"description\":\"Get the weather\",\"slug\":\"get-weather\"}],\"language\":\"fr\",\"processing_language\":\"fr\",\"sentiment\":\"neutral\",\"source\":\"Quel est la meteo pour Paris pour demain ?\",\"status\":200,\"timestamp\":\"2018-09-11T12:59:45.188804+00:00\",\"type\":\"enty:event\",\"uuid\":\"1b5b3686-0a7f-4aca-aa0e-7ac127046e27\",\"version\":\"2.12.0\"}}}}\n"
+				},
+				{
+					"name": "hello",
+					"originalRequest": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"disabled": false
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"text\":\"Bonjour\",\n  \"language\": \"fr-FR\",\n  \"user_id\": \"DEFAULT\"\n}  "
+						},
+						"url": {
+							"raw": "{{converse_url}}/api/converse/text",
+							"host": [
+								"{{converse_url}}"
+							],
+							"path": [
+								"api",
+								"converse",
+								"text"
+							]
+						}
+					},
+					"status": "OK",
+					"code": 200,
+					"_postman_previewlanguage": "json",
+					"header": [
+						{
+							"key": "Connection",
+							"value": "keep-alive",
+							"name": "Connection",
+							"description": "Options that are desired for the connection"
+						},
+						{
+							"key": "Content-Length",
+							"value": "1401",
+							"name": "Content-Length",
+							"description": "The length of the response body in octets (8-bit bytes)"
+						},
+						{
+							"key": "Content-Type",
+							"value": "application/json",
+							"name": "Content-Type",
+							"description": "The mime type of this content"
+						},
+						{
+							"key": "Date",
+							"value": "Tue, 11 Sep 2018 12:59:16 GMT",
+							"name": "Date",
+							"description": "The date and time that the message was sent"
+						},
+						{
+							"key": "Server",
+							"value": "nginx/1.14.0",
+							"name": "Server",
+							"description": "A name for the server"
+						}
+					],
+					"cookie": [],
+					"body": "{\"input\":\"Bonjour\",\"intent\":\"greetings\",\"message\":\"Salut Jean-Mi !\",\"nlp\":{\"message\":\"Dialog rendered with success\",\"results\":{\"conversation\":{\"id\":\"DEFAULT\",\"language\":\"fr\",\"memory\":{\"appointment-date\":{\"accuracy\":\"month,day\",\"chronology\":\"future\",\"confidence\":0.99,\"formatted\":\"lundi 27 ao\\u00fbt 2018 \\u00e0 00h00m00s (+0000)\",\"iso\":\"2018-08-27T00:00:00+00:00\",\"raw\":\"le 27 ao\\u00fbt\",\"state\":\"absolute\"},\"appointment-person\":{\"confidence\":0.57,\"raw\":\"boulanger\"},\"crypto\":{\"confidence\":0.85,\"raw\":\"ethereum\",\"value\":\"ethereum\"},\"location\":{\"confidence\":0.99,\"country\":\"fr\",\"formatted\":\"Paris, France\",\"lat\":48.856614,\"lng\":2.3522219,\"place\":\"ChIJD7fiBh9u5kcRYJSMaMOCCwQ\",\"raw\":\"Paris\",\"type\":\"locality\"},\"username\":{\"confidence\":0.99,\"fullname\":\"Jean-Mi\",\"raw\":\"Jean-Mi\"},\"weather-location\":{\"confidence\":0.99,\"country\":\"fr\",\"formatted\":\"Paris, France\",\"lat\":48.856614,\"lng\":2.3522219,\"place\":\"ChIJD7fiBh9u5kcRYJSMaMOCCwQ\",\"raw\":\"Paris\",\"type\":\"locality\"}},\"skill\":\"introduce\",\"skill_occurences\":2},\"messages\":[{\"content\":\"Salut Jean-Mi !\",\"type\":\"text\"}],\"nlp\":{\"act\":\"assert\",\"entities\":{},\"intents\":[{\"confidence\":0.99,\"description\":\"Says hello\",\"slug\":\"greetings\"}],\"language\":\"fr\",\"processing_language\":\"fr\",\"sentiment\":\"vpositive\",\"source\":\"Bonjour\",\"status\":200,\"timestamp\":\"2018-09-11T12:59:15.925690+00:00\",\"type\":null,\"uuid\":\"23c73837-6256-496e-b641-32f8bce5a943\",\"version\":\"2.12.0\"}}}}\n"
+				}
+			]
+		},
+		{
+			"name": "Converse - audio/text",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "formdata",
+					"formdata": [
+						{
+							"key": "audio",
+							"type": "file"
+						},
+						{
+							"key": "language",
+							"value": "fr-FR",
+							"type": "text"
+						},
+						{
+							"key": "user_id",
+							"value": "DEFAULT",
+							"type": "text"
+						}
+					]
+				},
+				"url": {
+					"raw": "{{converse_url}}/api/converse/text",
+					"host": [
+						"{{converse_url}}"
+					],
+					"path": [
+						"api",
+						"converse",
+						"text"
+					]
+				}
+			},
+			"response": [
+				{
+					"name": "hello",
+					"originalRequest": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"disabled": false
+							}
+						],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "audio",
+									"type": "file",
+									"src": {
+										"0": {}
+									}
+								},
+								{
+									"key": "language",
+									"value": "fr-FR",
+									"type": "text"
+								},
+								{
+									"key": "user_id",
+									"value": "DEFAULT",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{url}}/api/converse/text",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"api",
+								"converse",
+								"text"
+							]
+						}
+					},
+					"status": "OK",
+					"code": 200,
+					"_postman_previewlanguage": "json",
+					"header": [
+						{
+							"key": "Connection",
+							"value": "keep-alive",
+							"name": "Connection",
+							"description": "Options that are desired for the connection"
+						},
+						{
+							"key": "Content-Length",
+							"value": "1445",
+							"name": "Content-Length",
+							"description": "The length of the response body in octets (8-bit bytes)"
+						},
+						{
+							"key": "Content-Type",
+							"value": "application/json",
+							"name": "Content-Type",
+							"description": "The mime type of this content"
+						},
+						{
+							"key": "Date",
+							"value": "Tue, 11 Sep 2018 13:03:27 GMT",
+							"name": "Date",
+							"description": "The date and time that the message was sent"
+						},
+						{
+							"key": "Server",
+							"value": "nginx/1.14.0",
+							"name": "Server",
+							"description": "A name for the server"
+						}
+					],
+					"cookie": [],
+					"body": "{\"input\":\"Bonjour\",\"intent\":\"greetings\",\"message\":\"Bien le bonjour Jean-Mi !\",\"nlp\":{\"message\":\"Dialog rendered with success\",\"results\":{\"conversation\":{\"id\":\"DEFAULT\",\"language\":\"fr\",\"memory\":{\"appointment-date\":{\"accuracy\":\"month,day\",\"chronology\":\"future\",\"confidence\":0.99,\"formatted\":\"lundi 27 ao\\u00fbt 2018 \\u00e0 00h00m00s (+0000)\",\"iso\":\"2018-08-27T00:00:00+00:00\",\"raw\":\"le 27 ao\\u00fbt\",\"state\":\"absolute\"},\"appointment-person\":{\"confidence\":0.57,\"raw\":\"boulanger\"},\"crypto\":{\"confidence\":0.85,\"raw\":\"ethereum\",\"value\":\"ethereum\"},\"location\":{\"confidence\":0.99,\"country\":\"fr\",\"formatted\":\"Paris, France\",\"lat\":48.856614,\"lng\":2.3522219,\"place\":\"ChIJD7fiBh9u5kcRYJSMaMOCCwQ\",\"raw\":\"Paris\",\"type\":\"locality\"},\"username\":{\"confidence\":0.99,\"fullname\":\"Jean-Mi\",\"raw\":\"Jean-Mi\"},\"weather-location\":{\"confidence\":0.99,\"country\":\"fr\",\"formatted\":\"Paris, France\",\"lat\":48.856614,\"lng\":2.3522219,\"place\":\"ChIJD7fiBh9u5kcRYJSMaMOCCwQ\",\"raw\":\"Paris\",\"type\":\"locality\"}},\"skill\":\"introduce\",\"skill_occurences\":1},\"messages\":[{\"content\":\"Bien le bonjour Jean-Mi !\",\"type\":\"text\"}],\"nlp\":{\"act\":\"assert\",\"entities\":{},\"intents\":[{\"confidence\":0.99,\"description\":\"Says hello\",\"slug\":\"greetings\"}],\"language\":\"fr\",\"processing_language\":\"fr\",\"sentiment\":\"vpositive\",\"source\":\"Bonjour\",\"status\":200,\"timestamp\":\"2018-09-11T13:03:27.357471+00:00\",\"type\":null,\"uuid\":\"f7d79f96-704a-4463-a679-83befdd5d19d\",\"version\":\"2.12.0\"}}},\"stt_confidence\":0.8844}\n"
+				}
+			]
+		},
+		{
+			"name": "Converse - audio/audio",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "multipart/form-data"
+					}
+				],
+				"body": {
+					"mode": "formdata",
+					"formdata": [
+						{
+							"key": "audio",
+							"value": "",
+							"type": "file"
+						},
+						{
+							"key": "language",
+							"value": "fr-FR",
+							"type": "text"
+						},
+						{
+							"key": "user_id",
+							"value": "AZER",
+							"type": "text"
+						}
+					]
+				},
+				"url": {
+					"raw": "{{converse_url}}/api/converse/audio",
+					"host": [
+						"{{converse_url}}"
+					],
+					"path": [
+						"api",
+						"converse",
+						"audio"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "STT",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "formdata",
+					"formdata": [
+						{
+							"key": "audio",
+							"type": "file"
+						},
+						{
+							"key": "language",
+							"value": "fr-FR",
+							"type": "text"
+						}
+					]
+				},
+				"url": {
+					"raw": "{{converse_url}}/api/stt/recognize",
+					"host": [
+						"{{converse_url}}"
+					],
+					"path": [
+						"api",
+						"stt",
+						"recognize"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "TTS",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\t\"text\": \"Bonjour Yolaine Costa\",\n\t\"language\": \"fr-FR\"\n}"
+				},
+				"url": {
+					"raw": "{{converse_url}}/api/tts/speak",
+					"host": [
+						"{{converse_url}}"
+					],
+					"path": [
+						"api",
+						"tts",
+						"speak"
+					]
+				}
+			},
+			"response": []
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"id": "c6b7ead7-cc79-4d26-916c-a9f2c43e57b9",
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"id": "6aa634bd-1d13-406f-ab24-375fa9e43e70",
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		}
+	]
+}
