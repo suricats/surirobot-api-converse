@@ -71,7 +71,7 @@ def recast_send_request_memory(field, user_id, value=None):
             raise InvalidCredentialsException(api_name='Recast')
         else:
             raise ExternalAPIException(api_name='Recast', description='memory_update({})'.format(res1.status_code))
-    elif res.status_code == 401:
+    elif res.status_code == 401 or res.status_code == 404:
         raise InvalidCredentialsException(api_name='Recast')
     else:
-        raise ExternalAPIException(api_name='Recast', description='memory_get({})'.format(res.status_code))
+        raise ExternalAPIException(api_name='Recast', description='memory_get({})\n{}'.format(res.status_code, res.content))

@@ -69,7 +69,7 @@ pytest-cov==2.5.1
 pytest-env==0.6.2
 pytest-flask==0.10.0
 pytest-sugar==0.9.1
-python-dotenv==0.8.2
+
 pytz==2018.4
 requests==2.18.4
 rsa==3.4.2

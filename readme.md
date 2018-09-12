@@ -23,7 +23,8 @@ This API provides all the necessary endpoints to give the `converse` capability 
 * Virtualenvwrapper ```pip install virtualenvwrapper```
 * If you have some trouble with the command ```workon``` see : https://stackoverflow.com/questions/29900090/virtualenv-workon-doesnt-work
 
-## Installation 
+## Installation
+PYTHON 3.7 NOT SUPPORTED
 
 * Clone repository 
 * Create virtualenv
