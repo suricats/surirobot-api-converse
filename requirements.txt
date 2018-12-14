@@ -1,3 +1,4 @@
+python-dotenv==0.8.2
 python-dateutil
 timezonefinder
 aniso8601==3.0.0
